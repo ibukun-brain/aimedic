@@ -10,7 +10,7 @@ __pycache__/
 *.sqlite3-journal
 media/
 uploads/
-static_root/
+# static_root/
 *.db
 env.bat
 env.sh
