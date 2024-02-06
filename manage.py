@@ -11,7 +11,7 @@ def main():
 
     if base_settings.DEBUG:
         os.environ.setdefault(
-            "DJANGO_SETTINGS_MODULE", "aimedic.settings.development_settings"
+            "DJANGO_SETTINGS_MODULE", "aimedic.settings.production_settings"
         )
 
     os.environ.setdefault(
