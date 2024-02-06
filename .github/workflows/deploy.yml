@@ -24,6 +24,8 @@ jobs:
       - name: "Run tests"
         run: |
           python manage.py test
+      - name: Create .env file
+        uses: SpicyPizza/create-envfile@v2.0
         with:
             envkey_PUSHER_APP_ID: 0123456789
             envkey_PUSHER_KEY: pusher_key
