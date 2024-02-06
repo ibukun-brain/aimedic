@@ -24,6 +24,11 @@ jobs:
       - name: "Run tests"
         run: |
           python manage.py test
+        with:
+            envkey_PUSHER_APP_ID: 0123456789
+            envkey_PUSHER_KEY: pusher_key
+            envkey_PUSHER_SECRET: pusher_secret
+            envkey_PUSHSER_CLUSTER: pusher_cluster
       # - name: "Run security checks"
       #   run: |
       #     python manage.py check --deploy --fail-level ERROR
