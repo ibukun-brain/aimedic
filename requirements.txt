@@ -19,7 +19,7 @@ drf-spectacular==0.26.3
 drf-spectacular-sidecar==2023.6.1
 Pillow==9.5.0
 psycopg2-binary==2.9.6
-redis==4.0.0
+redis
 user-agents==2.2.0
 whitenoise==6.0.0
 django-pusherable==0.2.0
