@@ -1,0 +1,21 @@
+-r requirements.txt
+pylint==2.13.0
+black==22.3.0
+# coverage==6.3.2
+# flake8==4.0.1
+ipython==8.0.1
+autopep8
+faker
+isort
+flake8
+# pytest-django==4.5.2
+# pytest-cov==3.0.0
+# pytest-xdist==2.5.0
+# pytest-mock==3.7.0
+# django-seed==0.3.1
+# django-redisboard==8.4.0
+django-debug-toolbar==4.1.0
+
+# django-extensions==3.2.3
+# Werkzeug==2.3.7
+# pyOpenSSL==23.2.0
