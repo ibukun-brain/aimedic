@@ -21,10 +21,10 @@ jobs:
       - name: Create .env file
         uses: SpicyPizza/create-envfile@v2.0
         with:
-            envkey_PUSHER_APP_ID: ${{ secrets.PUSHER_APP_ID }}
-            envkey_PUSHER_KEY: ${{ secrets.PUSHER_KEY }}
-            envkey_PUSHER_SECRET: ${{ secrets.PUSHER_SECRET }}
-            envkey_PUSHER_CLUSTER: ${{ secrets.PUSHER_CLUSTER }}
+            envkey_PUSHER_APP_ID: "1743933"
+            envkey_PUSHER_KEY: "5c095298c6bebc995925"
+            envkey_PUSHER_SECRET: "c7946d260b0d0925e510"
+            envkey_PUSHER_CLUSTER: "eu"
       - name: "Run code analysis"
         run: |
           find -name "*.py" -not -path "./env/*" | xargs pylint
