@@ -17,7 +17,7 @@ DJOSER = {
         "user_create": "home.api.serializers.CustomUserCreateSerializer",
         "user": "home.api.serializers.CustomUserSerializer",
         "current_user": "home.api.serializers.CustomUserSerializer",
-        'token_create': 'djoser.serializers.TokenCreateSerializer',
+        "token_create": "djoser.serializers.TokenCreateSerializer",
     },
     "SOCIAL_AUTH_TOKEN_STRATEGY": "djoser.social.token.jwt.TokenStrategy",
     "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": [

@@ -26,7 +26,7 @@ DATABASES["default"] = dj_database_url.parse(
     conn_health_checks=True,
 )
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 
 # DATABASES["default"]["NAME"] = get_env_variable("DATABASE_NAME", "porfolio")

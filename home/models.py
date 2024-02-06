@@ -1,16 +1,15 @@
 import auto_prefetch
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 from django_resized import ResizedImageField
-
 
 from aimedic.utils.choices import Gender, Profile
 from aimedic.utils.managers import CustomUserManager
 from aimedic.utils.media import MediaHelper
 from aimedic.utils.models import TimeBasedModel
 from aimedic.utils.validators import FileValidatorHelper
-from django.core.mail import send_mail
 
 
 class CustomUser(TimeBasedModel, AbstractBaseUser, PermissionsMixin):
@@ -34,9 +33,7 @@ class CustomUser(TimeBasedModel, AbstractBaseUser, PermissionsMixin):
         ],
     )
     type = models.TextField(
-        max_length=50,
-        choices=Profile.choices,
-        default=Profile.Patient
+        max_length=50, choices=Profile.choices, default=Profile.Patient
     )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -68,15 +65,16 @@ class CustomUser(TimeBasedModel, AbstractBaseUser, PermissionsMixin):
 
     @property
     def image_url(self) -> str:
-
         if self.profile_pic:
             return self.profile_pic.url
+        return ""
 
     @property
-    def age(self) -> int:
+    def age(self) -> str:
         if self.date_of_birth:
             _age = (timezone.now().date() - self.date_of_birth) / 365
             return _age.days
+        return ""
 
     def __str__(self):
         return self.get_full_name() or self.email

@@ -28,6 +28,7 @@ class PatientAppointmentListAPIView(generics.ListAPIView):
 
 class PatientAppointmentCreateAPIView(generics.CreateAPIView):
     """Endpoint to send appointment to practitioner"""
+
     serializer_class = PatientCreateAppointmentSerializer
     queryset = None
 
@@ -39,10 +40,11 @@ class PatientAppointmentCreateAPIView(generics.CreateAPIView):
 
 class PractitionerAppointmentListAPIView(generics.ListAPIView):
     """Endpoint for practitioner appointments"""
+
     serializer_class = PractitionerAppointmentSerializer
     permission_classes = [
         permissions.IsAuthenticated,
-        custom_permissions.IsPractitionerOrReadOnly
+        custom_permissions.IsPractitionerOrReadOnly,
     ]
     queryset = Appointment.objects.all()
 
@@ -56,6 +58,7 @@ class PractitionerAppointmentListAPIView(generics.ListAPIView):
 
 class PractitionerAcceptAppointmentDetailAPIView(generics.RetrieveAPIView):
     """Endpoint to view appointment detail sent to the practitioner"""
+
     serializer_class = PractitionerAppointmentSerializer
 
     def get_object(self):
@@ -69,6 +72,7 @@ class PractitionerAcceptAppointmentDetailAPIView(generics.RetrieveAPIView):
 
 class PractitionerAcceptAppointmentUpdateAPIView(generics.UpdateAPIView):
     """Endpoint to acccept appointment sent to the practitioner"""
+
     serializer_class = PractitionerAcceptAppointmentSerializer
 
     def get_object(self):
@@ -88,10 +92,9 @@ class PractitionerTodayAppointmentListAPIView(generics.ListAPIView):
     queryset = Appointment.objects.all()
 
     def get_queryset(self):
-        qs = Appointment.objects.select_related("patient", "practitioner") \
-            .filter(
-                practitioner=self.request.user.practitioner,
-                date=datetime.now().date(),
-                active=True,
-            )
+        qs = Appointment.objects.select_related("patient", "practitioner").filter(
+            practitioner=self.request.user.practitioner,
+            date=datetime.now().date(),
+            active=True,
+        )
         return qs

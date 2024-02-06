@@ -7,9 +7,7 @@ from appointments.models import Appointment
 
 
 class PatientCreateAppointmentSerializer(serializers.ModelSerializer):
-    patient = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
+    patient = serializers.HiddenField(default=serializers.CurrentUserDefault())
     practitioner = serializers.StringRelatedField()
     date = serializers.DateField()
 
@@ -21,6 +19,7 @@ class PatientCreateAppointmentSerializer(serializers.ModelSerializer):
             "date",
             # "time",
         ]
+
     validators = [
         validators.UniqueForDateValidator(
             queryset=Appointment.objects.select_related(
@@ -29,15 +28,13 @@ class PatientCreateAppointmentSerializer(serializers.ModelSerializer):
             ).all(),
             field="patient",
             date_field="date",
-            message="You have booked an appointment with this practitioner"
+            message="You have booked an appointment with this practitioner",
         )
     ]
 
 
 class PatientAppointmentSerializer(serializers.ModelSerializer):
-    patient = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
+    patient = serializers.HiddenField(default=serializers.CurrentUserDefault())
     practitioner = serializers.StringRelatedField()
     # time = serializers.SerializerMethodField()
 
@@ -68,7 +65,7 @@ class PatientAppointmentSerializer(serializers.ModelSerializer):
             },
             "date": {
                 "read_only": True,
-            }
+            },
         }
 
 
@@ -92,10 +89,10 @@ class PractitionerAcceptAppointmentSerializer(serializers.ModelSerializer):
         if accept:
             try:
                 instance.accept_appointment
-            except ValidationError:
+            except ValidationError as e:
                 raise serializers.ValidationError(
                     {"error": "You cannot be a practioner and a patient to yourself"}
-                )
+                ) from e
             return {
                 "success": True,
                 "patient": patient,
@@ -103,17 +100,13 @@ class PractitionerAcceptAppointmentSerializer(serializers.ModelSerializer):
                 "message": "Appointment accepted",
             }
 
-        else:
-            appointment = Appointment.objects.select_related("patient", "practitioner").get(
-                patient=patient,
-                practitioner=practitioner,
-            )
-            appointment.active = False
-            appointment.save()
-            return {
-                "success": True,
-                "message": "Appointment declined"
-            }
+        appointment = Appointment.objects.select_related("patient", "practitioner").get(
+            patient=patient,
+            practitioner=practitioner,
+        )
+        appointment.active = False
+        appointment.save()
+        return {"success": True, "message": "Appointment declined"}
 
 
 class PractitionerAppointmentSerializer(serializers.ModelSerializer):
@@ -135,7 +128,7 @@ class PractitionerAppointmentSerializer(serializers.ModelSerializer):
             # "created_at",
             "active",
             "completed",
-            "accept"
+            "accept",
         ]
         extra_kwargs = {
             "active": {
@@ -143,7 +136,7 @@ class PractitionerAppointmentSerializer(serializers.ModelSerializer):
             },
             "completed": {
                 "read_only": False,
-            }
+            },
         }
 
     @extend_schema_field(OpenApiTypes.TIME)

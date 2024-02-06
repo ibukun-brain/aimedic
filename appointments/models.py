@@ -1,11 +1,11 @@
 import auto_prefetch
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.constraints import UniqueConstraint
 from django.utils import timezone
-from practitioner.models import PractitionerPatient
-from django.core.exceptions import ValidationError
 
 from aimedic.utils.models import TimeBasedModel
+from practitioner.models import PractitionerPatient
 
 
 class Appointment(TimeBasedModel):
@@ -29,30 +29,28 @@ class Appointment(TimeBasedModel):
 
     class Meta:
         ordering = ["-date", "-updated_at"]
-        indexes = [
-            models.Index(fields=["-date", "-updated_at"])
-        ]
+        indexes = [models.Index(fields=["-date", "-updated_at"])]
         constraints = [
             UniqueConstraint(
-                name='unique_appointment', fields=['patient', 'practitioner', 'date'],
+                name="unique_appointment",
+                fields=["patient", "practitioner", "date"],
                 violation_error_message=(
                     "You have booked an appointment with this practitioner"
-                )
+                ),
             )
         ]
 
     @property
     def accept_appointment(self):
         _practitioner_patient, _ = PractitionerPatient.objects.get_or_create(
-            patient=self.patient,
-            practitioner=self.practitioner
+            patient=self.patient, practitioner=self.practitioner
         )
 
     def clean(self):
         if self.practitioner.user == self.patient:
             raise ValidationError(
-                "You cannot book an appointment as a practitioner" +
-                "and patient the same time"
+                "You cannot book an appointment as a practitioner"
+                + "and patient the same time"
             )
 
     def save(self, *args, **kwargs):

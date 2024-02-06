@@ -1,4 +1,3 @@
-
 import json
 
 import requests
@@ -20,9 +19,7 @@ class AutoGonAI:
             "X-AUG-KEY": self.api_key,
             "Content-Type": "application/json",
         }
-        payload = {
-            "message": message
-        }
+        payload = {"message": message}
 
         try:
             r = requests.post(

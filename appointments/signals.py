@@ -9,11 +9,9 @@ from practitioner.models import PractitionerPatient
 @receiver(post_save, sender=Appointment)
 def create_practitioner_patient(instance, created, *args, **kwargs):
     if created:
-        practitioner_patient, _ = PractitionerPatient.objects \
-            .get_or_create(
-                practitioner=instance.practitioner,
-                patient=instance.patient
-            )
+        practitioner_patient, _ = PractitionerPatient.objects.get_or_create(
+            practitioner=instance.practitioner, patient=instance.patient
+        )
         _user_practitioner_channel, _ = UserPractitionerChannel.objects.get_or_create(
             chat=practitioner_patient
         )

@@ -4,16 +4,13 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django_q.tasks import async_task
 from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
-from pusherable.mixins import PusherMixin
 from rest_framework import generics, status
 
 from aimedic.utils.settings import get_env_variable
-from chats.api.serializers import (  # PractitionerChatSerializer,; UserChannelChatSerializer,
+from chats.api.serializers import (
     ChannelDetailSerializer,
     ChannelSerializer,
     UserAIChatSerializer,
-    UserPractitionerChannelChat,
-    UserPractitionerChannelChatSerializer,
     UserPractitionerChannelDetailSerializer,
     UserPractitionerChatSerializer,
     UserPractitionerCreateChatSerializer,
@@ -39,8 +36,11 @@ class ChannelListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        qs = Channel.objects.prefetch_related("useraichat") \
-            .select_related("user").filter(user=user)
+        qs = (
+            Channel.objects.prefetch_related("useraichat")
+            .select_related("user")
+            .filter(user=user)
+        )
         return qs
 
     @extend_schema(
@@ -68,11 +68,11 @@ class ChannelListAPIView(generics.ListAPIView):
                         "401 UNAUTHORIZED Response",
                         value={
                             "detail": "Authentication credentials were not provided."
-                        }
+                        },
                     )
                 ],
             ),
-        }
+        },
     )
     def get(self, request, *args, **kwargs):
         """
@@ -92,10 +92,13 @@ class ChannelDetailAPIView(generics.RetrieveDestroyAPIView):
     def get_object(self):
         pk = self.kwargs["pk"]
         try:
-            obj = Channel.objects.prefetch_related("useraichat") \
-                .select_related("user").get(pk=pk)
-        except Channel.DoesNotExist:
-            raise Http404
+            obj = (
+                Channel.objects.prefetch_related("useraichat")
+                .select_related("user")
+                .get(pk=pk)
+            )
+        except Channel.DoesNotExist as e:
+            raise Http404 from e
         return obj
 
 
@@ -112,7 +115,7 @@ class ChannelRenameAPIView(generics.UpdateAPIView):
         serializer.save(user=self.request.user)
 
 
-class UserAIChatCreateAPIView(PusherMixin, generics.CreateAPIView):
+class UserAIChatCreateAPIView(generics.CreateAPIView):
     pusher_event_name = "user_chat"
     serializer_class = UserAIChatSerializer
     queryset = UserAIChat.objects.select_related("user").all()
@@ -172,12 +175,13 @@ class UserPractitionerChannelDetailAPIView(generics.RetrieveAPIView):
         # return cache_obj
 
 
-class UserPractitionerChannelChatCreateAPIView(PusherMixin, generics.CreateAPIView):
+class UserPractitionerChannelChatCreateAPIView(generics.CreateAPIView):
     """Endpoint to create/send messages or chat"""
+
     # serializer_class = UserChannelChatSerializer
     serializer_class = UserPractitionerCreateChatSerializer
     queryset = None
-    pusher_event_name = u"send_chat"
+    pusher_event_name = "send_chat"
 
     # def get_serializer_class(self):
     #     if self.request.user.is_practitioner:
@@ -190,26 +194,24 @@ class UserPractitionerChannelChatCreateAPIView(PusherMixin, generics.CreateAPIVi
             "chats"
         )
         user_practitioner_channel = get_object_or_404(
-            user_practitioner_channel,
-            pk=chat_id
+            user_practitioner_channel, pk=chat_id
         )
         if self.request.user.is_practitioner:
             serializer.save(
                 channel=user_practitioner_channel,
-                practitioner=self.request.user.practitioner
+                practitioner=self.request.user.practitioner,
             )
         else:
             serializer.save(
-                channel=user_practitioner_channel,
-                patient=self.request.user
+                channel=user_practitioner_channel, patient=self.request.user
             )
         # trigger client with django_q
         pusher_client.trigger(
-            f'userpractitionerchannelchat_{chat_id}',
-            u'send_chat',
+            f"userpractitionerchannelchat_{chat_id}",
+            "send_chat",
             {
-                u'text': serializer.validated_data.get("text"),
-                u"profile_picture": serializer.data.get("profile_picture"),
-                u"sender": serializer.data.get("sender"),
-            }
+                "text": serializer.validated_data.get("text"),
+                "profile_picture": serializer.data.get("profile_picture"),
+                "sender": serializer.data.get("sender"),
+            },
         )

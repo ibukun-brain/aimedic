@@ -28,11 +28,11 @@ urlpatterns = [
     path(
         "practitioners/",
         views.PractitionerAppointmentListAPIView.as_view(),
-        name="appointment-practitioners"
+        name="appointment-practitioners",
     ),
     path(
         "practitioners/today/",
         views.PractitionerTodayAppointmentListAPIView.as_view(),
-        name="appointment-practitioners-today"
+        name="appointment-practitioners-today",
     ),
 ]

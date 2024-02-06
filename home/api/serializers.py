@@ -17,10 +17,9 @@ User = get_user_model()
 
 
 class BaseOTPSerializer(serializers.Serializer):
-
     def generate_otp(self, interval=None, resend=False):
         totp = pyotp.TOTP(
-            'base32secret3232',
+            "base32secret3232",
             digits=4,
             interval=interval,
         )
@@ -35,13 +34,11 @@ class BaseOTPSerializer(serializers.Serializer):
         print(attrs.get("interval"))
         try:
             user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            raise exceptions.AuthenticationFailed("Authentication Failed")
+        except User.DoesNotExist as e:
+            raise exceptions.AuthenticationFailed("Authentication Failed") from e
 
         if not self.generate_otp(interval=attrs.get("interval")).verify(otp):
-            raise serializers.ValidationError(
-                {"otp": "Invalid OTP"}
-            )
+            raise serializers.ValidationError({"otp": "Invalid OTP"})
         attrs["user"] = user
         del request.session["email"]
         return super().validate(attrs)
@@ -49,25 +46,23 @@ class BaseOTPSerializer(serializers.Serializer):
 
 class GenerateOTPSerializer(BaseOTPSerializer):
     email = serializers.EmailField()
-    password = serializers.CharField(
-        style={'input_type': 'password'}
-    )
+    password = serializers.CharField(style={"input_type": "password"})
 
     def validate(self, attrs: dict):
         email = attrs.get("email").lower().strip()
         attrs["interval"] = 600  # interval to generate OTP
         request = self.context.get("request")
-        user = authenticate(
-            request=request,
-            email=email,
-            password=attrs.get("password"),
-        )
+        try:
+            user = authenticate(
+                request=request,
+                email=email,
+                password=attrs.get("password"),
+            )
 
-        if user is None:
-            raise exceptions.AuthenticationFailed("Invalid login details.")
-        else:
-            attrs["user_object"] = user
-            request.session["email"] = email
+        except exceptions.AuthenticationFailed as e:
+            raise exceptions.AuthenticationFailed("Invalid login details.") from e
+        attrs["user_object"] = user
+        request.session["email"] = email
 
         return attrs
 
@@ -112,7 +107,7 @@ class ResendOTPSerializer(BaseOTPSerializer):
     def create(self, validated_data):
         request = self.context.get("request")
         email = validated_data.get("email")
-        request.session['email'] = email
+        request.session["email"] = email
         otp = self.generate_otp(interval=600).now()
         subject = "OTP Verification"
         message = f"Hi there, your otp is {otp}\nexpires in 10 minutes"
@@ -161,7 +156,6 @@ class ResendOTPSerializer(BaseOTPSerializer):
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
-
     class Meta(UserCreateSerializer.Meta):
         model = User
         fields = [

@@ -2,7 +2,7 @@ from rest_framework import permissions
 
 
 class IsPractitionerOrReadOnly(permissions.BasePermission):
-    message = 'You are not a practitionr.'
+    message = "You are not a practitionr."
     """
     Object-level permission to only allow wallet users/owners of an object
     to access the wallet. Assumes the model instance has an `user` attribute.

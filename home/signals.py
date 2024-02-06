@@ -1,8 +1,8 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from home.models import CustomUser
 from aimedic.utils.choices import Profile
+from home.models import CustomUser
 from practitioner.models import Practitioner, PractitionerPatient
 
 

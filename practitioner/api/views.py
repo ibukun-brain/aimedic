@@ -14,7 +14,7 @@ class PractitionerListCreateAPIView(generics.ListCreateAPIView):
     queryset = Practitioner.objects.none()
 
     def get_queryset(self):
-        qs = Practitioner.objects.select_related('user').all()
+        qs = Practitioner.objects.select_related("user").all()
         return qs
 
     def perform_create(self, serializer):
@@ -25,7 +25,7 @@ class PractitionerOverviewAPIView(generics.RetrieveAPIView):
     serializer_class = PractitionerOverviewSerializer
     permission_classes = [
         custom_permissions.IsOwnerOrReadOnly,
-        permissions.IsAuthenticated
+        permissions.IsAuthenticated,
     ]
     queryset = Practitioner.objects.all()
 
@@ -33,10 +33,10 @@ class PractitionerOverviewAPIView(generics.RetrieveAPIView):
         user = self.request.user
         try:
             return Practitioner.objects.get(user=user)
-        except Practitioner.DoesNotExist:
+        except Practitioner.DoesNotExist as e:
             raise serializers.ValidationError(
                 {"error": "Practitioner does not exist"}
-            )
+            ) from e
 
 
 class PractitionerPatientsListCreateAPIView(generics.ListCreateAPIView):

@@ -1,9 +1,9 @@
 from django.db import IntegrityError
-from rest_framework import serializers
-from drf_spectacular.utils import extend_schema_field
 from drf_spectacular.types import OpenApiTypes
-from chats.api.serializers import UserImageSerializer
+from drf_spectacular.utils import extend_schema_field
+from rest_framework import serializers
 
+from chats.api.serializers import UserImageSerializer
 from practitioner.models import Practitioner, PractitionerPatient
 
 
@@ -27,7 +27,7 @@ class PractitionerSerializer(serializers.ModelSerializer):
             },
             "latitude": {
                 "read_only": True,
-            }
+            },
         }
 
     def to_representation(self, instance):
@@ -44,7 +44,6 @@ class PractitionerSerializer(serializers.ModelSerializer):
 
 
 class PractitionerOverviewSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Practitioner
         fields = [

@@ -34,16 +34,12 @@ class Channel(TimeBasedModel):
 
     class Meta:
         ordering = ["-created_at", "-updated_at"]
-        indexes = [
-            models.Index(fields=["-created_at", "-updated_at"])
-        ]
+        indexes = [models.Index(fields=["-created_at", "-updated_at"])]
 
 
 class UserAIChat(TimeBasedModel):
     channel = auto_prefetch.ForeignKey(
-        "chats.Channel",
-        on_delete=models.CASCADE,
-        related_name="useraichat"
+        "chats.Channel", on_delete=models.CASCADE, related_name="useraichat"
     )
     image = models.ImageField(blank=True, upload_to=MediaHelper.get_image_upload_path)
     text = models.TextField()
@@ -75,11 +71,12 @@ class UserAIChat(TimeBasedModel):
 
 class UserPractitionerChannel(TimeBasedModel):
     """private channel between user and practitioner"""
+
     chat = auto_prefetch.OneToOneField(
         "practitioner.PractitionerPatient",
         on_delete=models.CASCADE,
         null=True,
-        verbose_name="Practitioner and Patient"
+        verbose_name="Practitioner and Patient",
     )
 
     def __str__(self):
@@ -87,16 +84,12 @@ class UserPractitionerChannel(TimeBasedModel):
 
     class Meta:
         ordering = ["-created_at"]
-        indexes = [
-            models.Index(fields=["-created_at"])
-        ]
+        indexes = [models.Index(fields=["-created_at"])]
 
 
 class UserPractitionerChannelChat(LifecycleModelMixin, TimeBasedModel):
     channel = auto_prefetch.ForeignKey(
-        "chats.UserPractitionerChannel",
-        on_delete=models.CASCADE,
-        related_name="chats"
+        "chats.UserPractitionerChannel", on_delete=models.CASCADE, related_name="chats"
     )
     patient = auto_prefetch.ForeignKey(
         "home.CustomUser",
@@ -105,10 +98,7 @@ class UserPractitionerChannelChat(LifecycleModelMixin, TimeBasedModel):
         blank=True,
     )
     practitioner = auto_prefetch.ForeignKey(
-        "practitioner.Practitioner",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True
+        "practitioner.Practitioner", on_delete=models.CASCADE, null=True, blank=True
     )
     text = models.TextField()
 
@@ -130,15 +120,13 @@ class UserPractitionerChannelChat(LifecycleModelMixin, TimeBasedModel):
 
     class Meta:
         ordering = ["created_at"]
-        indexes = [
-            models.Index(fields=["created_at"])
-        ]
+        indexes = [models.Index(fields=["created_at"])]
 
     @hook(AFTER_SAVE)
     @hook(AFTER_UPDATE)
     @hook(AFTER_DELETE)
     def invalidate_cache(self):
-        cache.delete('user_practitioner_channel')
+        cache.delete("user_practitioner_channel")
 
 
 # class PractitionerChannelChat(TimeBasedModel):

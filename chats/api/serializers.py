@@ -13,7 +13,6 @@ from practitioner.models import Practitioner, PractitionerPatient
 
 
 class ChannelSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Channel
         fields = [
@@ -195,6 +194,7 @@ class UserPractitionerChannelDetailSerializer(serializers.ModelSerializer):
 
 class UserImageSerializer(serializers.ModelSerializer):
     """Serializer for showing chat lists it contains user name and images"""
+
     name = serializers.SerializerMethodField()
 
     class Meta:
@@ -213,13 +213,12 @@ class PractitionerChatListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Practitioner
-        fields = [
-            "user"
-        ]
+        fields = ["user"]
 
 
 class UserPractitionerChatSerializer(serializers.ModelSerializer):
     """Users/Patients chats list"""
+
     chat_id = serializers.SerializerMethodField()  # chat or channel id
     practitioner = PractitionerChatListSerializer(many=False)
 

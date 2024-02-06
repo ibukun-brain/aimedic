@@ -9,12 +9,13 @@ from home.api.serializers import (
 )
 
 
-class AllowAnyPermissionMixins(object):
+class AllowAnyPermissionMixins():
     permission_classes = [permissions.AllowAny]
 
 
 class GenerateOTPAPIView(AllowAnyPermissionMixins, generics.GenericAPIView):
     """Generate otp with email and password"""
+
     serializer_class = GenerateOTPSerializer
 
     @extend_schema(
@@ -31,14 +32,14 @@ class GenerateOTPAPIView(AllowAnyPermissionMixins, generics.GenericAPIView):
                     OpenApiExample(
                         "200 OK response",
                         value={
-                                "success": True,
-                                "user": "user@email.com",
-                                "message": "Login Successful. OTP sent",
+                            "success": True,
+                            "user": "user@email.com",
+                            "message": "Login Successful. OTP sent",
                         },
                     )
                 ],
             ),
-        }
+        },
     )
     def post(self, request, format=None):
         serializer = self.get_serializer(data=request.data)
@@ -56,6 +57,7 @@ class GenerateOTPAPIView(AllowAnyPermissionMixins, generics.GenericAPIView):
 
 class VerifyOTPAPIView(AllowAnyPermissionMixins, generics.GenericAPIView):
     """Verify OTP"""
+
     serializer_class = VerifyOTPSerializer
     permission_classes = [permissions.AllowAny]
 
@@ -79,11 +81,11 @@ class VerifyOTPAPIView(AllowAnyPermissionMixins, generics.GenericAPIView):
                             "message": "OTP Verified",
                             "refresh": "string",
                             "access": "string",
-                        }
+                        },
                     )
                 ],
             ),
-        }
+        },
     )
     def post(self, request, format=None):
         serializer = self.get_serializer(data=request.data)
@@ -94,6 +96,7 @@ class VerifyOTPAPIView(AllowAnyPermissionMixins, generics.GenericAPIView):
 
 class ResendOTPAPIView(AllowAnyPermissionMixins, generics.GenericAPIView):
     """Resend OTP"""
+
     serializer_class = ResendOTPSerializer
 
     @extend_schema(
@@ -114,11 +117,11 @@ class ResendOTPAPIView(AllowAnyPermissionMixins, generics.GenericAPIView):
                             "success": True,
                             "message": "OTP Sent",
                             "email": "admin@example.com",
-                        }
+                        },
                     )
                 ],
             ),
-        }
+        },
     )
     def post(self, request, format=None):
         serializer = self.get_serializer(data=request.data)

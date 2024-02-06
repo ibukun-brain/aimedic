@@ -1,11 +1,10 @@
 from django.contrib import admin
 
-from chats.models import (
+from chats.models import (  # UserChannelChat,
     Channel,
-    UserPractitionerChannelChat,
     UserAIChat,
-    # UserChannelChat,
     UserPractitionerChannel,
+    UserPractitionerChannelChat,
 )
 
 
@@ -92,9 +91,12 @@ class UserPractitionerChannelChatAdmin(admin.ModelAdmin):
     list_display = ["practitioner", "patient", "created_at"]
     date_hierarchy = "created_at"
     search_fields = [
-        "patient__email", "patient__first_name", "patient__last_name",
-        "practitioner__user__email", "practitioner__user__first_name",
-        "practitioner__user__last_name"
+        "patient__email",
+        "patient__first_name",
+        "patient__last_name",
+        "practitioner__user__email",
+        "practitioner__user__first_name",
+        "practitioner__user__last_name",
     ]
     list_select_related = ["practitioner", "patient", "channel"]
     raw_id_fields = ["practitioner", "patient", "channel"]

@@ -13,6 +13,7 @@ exclude =
     migrations
     *settings.py
     apps.py
+    heart_disease.py
 
 max-complexity = 10
 

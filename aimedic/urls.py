@@ -1,4 +1,3 @@
-
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -7,13 +6,11 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
     path(
-        "api/appointments/",
-        include("appointments.api.urls", namespace="appointments")
+        "api/appointments/", include("appointments.api.urls", namespace="appointments")
     ),
     path("api/chats/", include("chats.api.urls", namespace="chats")),
     path(
-        "api/practitioner/",
-        include("practitioner.api.urls", namespace="practitioner")
+        "api/practitioner/", include("practitioner.api.urls", namespace="practitioner")
     ),
     path("api/auth/", include("home.api.urls", namespace="home")),
     path("api/auth/", include("djoser.urls")),

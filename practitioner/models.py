@@ -14,10 +14,7 @@ from aimedic.utils.models import TimeBasedModel
 
 
 class Practitioner(TimeBasedModel):
-    user = auto_prefetch.OneToOneField(
-        "home.CustomUser",
-        on_delete=models.CASCADE
-    )
+    user = auto_prefetch.OneToOneField("home.CustomUser", on_delete=models.CASCADE)
     office_address = models.CharField(max_length=256, blank=True)
     city = models.CharField(max_length=256, blank=True)
     state = models.CharField(max_length=256, blank=True)
@@ -54,12 +51,10 @@ class PractitionerPatient(LifecycleModelMixin, TimeBasedModel):
     practitioner = auto_prefetch.ForeignKey(
         "practitioner.Practitioner",
         on_delete=models.CASCADE,
-        related_name="practitioner_patient"
+        related_name="practitioner_patient",
     )
     patient = auto_prefetch.ForeignKey(
-        "home.CustomUser",
-        on_delete=models.CASCADE,
-        related_name="practitioner_patient"
+        "home.CustomUser", on_delete=models.CASCADE, related_name="practitioner_patient"
     )
 
     class Meta(auto_prefetch.Model.Meta):
@@ -75,8 +70,8 @@ class PractitionerPatient(LifecycleModelMixin, TimeBasedModel):
     @hook(AFTER_UPDATE)
     @hook(AFTER_DELETE)
     def invalidate_cache(self):
-        cache.delete('patient_list')
-        cache.delete('practitioner_list')
+        cache.delete("patient_list")
+        cache.delete("practitioner_list")
 
     def clean(self):
         if self.practitioner.user == self.patient:
@@ -91,15 +86,13 @@ class PractitionerPatient(LifecycleModelMixin, TimeBasedModel):
 
 class PractitionerOperation(TimeBasedModel):
     practitioner = auto_prefetch.ForeignKey(
-        "practitioner.Practitioner",
-        on_delete=models.CASCADE,
-        related_name="operations"
+        "practitioner.Practitioner", on_delete=models.CASCADE, related_name="operations"
     )
     patient = auto_prefetch.ForeignKey(
         "home.CustomUser",
         on_delete=models.SET_NULL,
         null=True,
-        related_name="operations"
+        related_name="operations",
     )
     log = models.TextField(blank=True)
     successful = models.BooleanField(default=False)
