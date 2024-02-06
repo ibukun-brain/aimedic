@@ -22,9 +22,9 @@ from practitioner.api.serializers import PractitionerPatientSerializer
 from practitioner.models import PractitionerPatient
 
 pusher_client = pusher.Pusher(
-    app_id=get_env_variable("PUSHER_APP_ID"),
-    key=get_env_variable("PUSHER_KEY"),
-    secret=get_env_variable("PUSHER_SECRET"),
+    app_id=get_env_variable("PUSHER_APP_ID", "1743933"),
+    key=get_env_variable("PUSHER_KEY", "5c095298c6bebc995925"),
+    secret=get_env_variable("PUSHER_SECRET", "c7946d260b0d0925e510"),
     cluster=get_env_variable("PUSHER_CLUSTER", "eu"),
 )
 
