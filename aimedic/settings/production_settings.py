@@ -51,7 +51,9 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+        "LOCATION": "redis://default:ibukun123@redis-13289.c267.us-east-1-4.ec2.cloud.redislabs.com:13289",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
     }
 }
