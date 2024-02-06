@@ -30,7 +30,7 @@ jobs:
             envkey_PUSHER_APP_ID: ${{ secrets.PUSHER_APP_ID }}
             envkey_PUSHER_KEY: ${{ secrets.PUSHER_KEY }}
             envkey_PUSHER_SECRET: ${{ secrets.PUSHER_SECRET }}
-            envkey_PUSHSER_CLUSTER: ${{ secrets.PUSHER_CLUSTER }}
+            envkey_PUSHER_CLUSTER: ${{ secrets.PUSHER_CLUSTER }}
       # - name: "Run security checks"
       #   run: |
       #     python manage.py check --deploy --fail-level ERROR
