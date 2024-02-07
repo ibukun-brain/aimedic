@@ -1,0 +1,12 @@
+{% block subject %}OTP Verification{% endblock %}
+
+{% comment %} {% block text_body %}
+{% endblock %} {% endcomment %}
+{% block html_body %}
+    <body style="top: 50%">
+        <div style="background: blue; display: flex; align-items: center">
+            <p>Hi there, your otp is {{otp}} expires in 10 minutes</p>
+        </div>
+        
+    </body>
+{% endblock %}

@@ -3,8 +3,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from home.views import run_cronjob
 
 urlpatterns = [
+    path("api/cron/", run_cronjob, name="cronjob"),
     path(
         "api/appointments/", include("appointments.api.urls", namespace="appointments")
     ),

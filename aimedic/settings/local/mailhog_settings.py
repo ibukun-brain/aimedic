@@ -4,4 +4,4 @@ EMAIL_HOST = "localhost"
 
 EMAIL_PORT = 1025
 
-DEFAULT_FROM_EMAIL = "services@aimedic.com"
+DEFAULT_FROM_EMAIL = "noreply@aimedic.com"

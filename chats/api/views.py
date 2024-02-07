@@ -1,8 +1,11 @@
+import threading
+
 import pusher
 from django.core.cache import cache
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django_q.tasks import async_task
+
+# from django_q.tasks import async_task
 from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
 from rest_framework import generics, status
 
@@ -16,7 +19,7 @@ from chats.api.serializers import (
     UserPractitionerCreateChatSerializer,
 )
 from chats.models import Channel, UserAIChat, UserPractitionerChannel
-from chats.tasks import chat_ai_task, summarize_channel_title_task
+from chats.tasks import summarize_channel_title_task
 from home.api import custom_permissions
 from practitioner.api.serializers import PractitionerPatientSerializer
 from practitioner.models import PractitionerPatient
@@ -125,10 +128,17 @@ class UserAIChatCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         text = serializer.validated_data.get("text")
-        ai_chat_id = serializer.validated_data.get("id")
+        # ai_chat_id = serializer.validated_data.get("id")
         channel = Channel.objects.create(title=text, user=self.request.user)
-        async_task(summarize_channel_title_task, channel.id, channel.title)
-        async_task(chat_ai_task, text, ai_chat_id)
+        # async_task(summarize_channel_title_task, channel.id, channel.title)
+        # async_task(chat_ai_task, text, ai_chat_id)
+        thread = threading.Thread(
+            target=summarize_channel_title_task,
+            args=[channel.id, channel.title],
+            daemon=True
+        )
+        thread.start()
+        # chat_ai_task(text, ai_chat_id)
         # call celery or threading to save ai response
         serializer.save(user=self.request.user, channel=channel)
 

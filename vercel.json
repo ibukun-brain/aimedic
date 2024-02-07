@@ -1,17 +1,16 @@
 {
   "version": 2,
+  "crons": [
+    {
+      "path": "/api/cron",
+      "schedule": "1 * * * *"
+    }
+  ],
   "builds": [
     {
       "src": "aimedic/wsgi.py",
       "use": "@vercel/python",
       "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
-    },
-    {
-      "src": "build_qcluster.sh",
-      "use": "@vercel/python",
-      "config": {
-        "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
-      }
     },
     {
       "src": "build_files.sh",
