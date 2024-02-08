@@ -12,7 +12,9 @@ def run_cronjob(request):
         recipient_list=[
             "ibukunolaifa@gmail.com",
             "ibukunolaifa1984@gmail.com"
-        ]
+        ],
+        auth_user="ibukunolaifa1984@gmail.com",
+        password="ysdllitnledizpva",
     )
     print("running cronjob")
     return HttpResponse("Ok")
