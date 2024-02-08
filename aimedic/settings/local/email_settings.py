@@ -5,13 +5,13 @@ EMAIL_HOST_USER = get_env_variable("EMAIL_HOST_USER", "XXX")
 
 EMAIL_HOST_PASSWORD = get_env_variable("EMAIL_HOST_PASSWORD", "XXX")
 
-EMAIL_PORT = get_env_variable("EMAIL_PORT", "XXX")
+EMAIL_PORT = 587 or get_env_variable("EMAIL_PORT", "XXX")
 
 EMAIL_HOST = get_env_variable("EMAIL_HOST", "XXX")
 
-EMAIL_USE_SSL = True
+# EMAIL_USE_SSL = True
 
-# EMAIL_USE_TLS = True production only
+EMAIL_USE_TLS = True
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
