@@ -14,7 +14,7 @@ def run_cronjob(request):
             "ibukunolaifa1984@gmail.com"
         ],
         auth_user="ibukunolaifa1984@gmail.com",
-        password="ysdllitnledizpva",
+        auth_password="ysdllitnledizpva",
     )
     print("running cronjob")
     return HttpResponse("Ok")
