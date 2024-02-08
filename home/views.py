@@ -9,9 +9,6 @@ def run_cronjob(request):
         subject="Cron job",
         message="cron job ran",
         from_email=DEFAULT_FROM_EMAIL,
-        "Cron job",
-        "cron job ran",
-        from_email="noreply@afrimed.com",
         recipient_list=[
             "ibukunolaifa@gmail.com",
             "ibukunolaifa1984@gmail.com"
