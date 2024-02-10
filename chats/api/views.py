@@ -56,7 +56,7 @@ class ChannelListAPIView(generics.ListAPIView):
                         "200 OK response",
                         value={
                             "pk": "67bd3bab-dfad-4362-9733-52c4d1b433fd",
-                            "title": "Hi there, have been experiencing certain symptoms"
+                            "title": "Hi there, have been experiencing symptoms",
                         },
                     )
                 ],
@@ -135,7 +135,7 @@ class UserAIChatCreateAPIView(generics.CreateAPIView):
         thread = threading.Thread(
             target=summarize_channel_title_task,
             args=[channel.id, channel.title],
-            daemon=True
+            daemon=True,
         )
         thread.start()
         # chat_ai_task(text, ai_chat_id)

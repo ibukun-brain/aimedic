@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
 from home.views import run_cronjob
 
 urlpatterns = [
@@ -12,7 +13,11 @@ urlpatterns = [
     ),
     path("api/chats/", include("chats.api.urls", namespace="chats")),
     path(
-        "api/practitioner/", include("practitioner.api.urls", namespace="practitioner")
+        "api/classification/",
+        include("classification.api.urls", namespace="classification"),
+    ),
+    path(
+        "api/practitioners/", include("practitioner.api.urls", namespace="practitioner")
     ),
     path("api/auth/", include("home.api.urls", namespace="home")),
     path("api/auth/", include("djoser.urls")),

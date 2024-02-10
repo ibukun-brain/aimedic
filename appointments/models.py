@@ -3,12 +3,14 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.constraints import UniqueConstraint
 from django.utils import timezone
+from django_lifecycle import AFTER_UPDATE, LifecycleModelMixin, hook
 
+from aimedic.utils.choices import AppointmentStatus
 from aimedic.utils.models import TimeBasedModel
 from practitioner.models import PractitionerPatient
 
 
-class Appointment(TimeBasedModel):
+class Appointment(LifecycleModelMixin, TimeBasedModel):
     patient = auto_prefetch.ForeignKey(
         "home.CustomUser",
         on_delete=models.CASCADE,
@@ -20,20 +22,27 @@ class Appointment(TimeBasedModel):
     )
     link = models.CharField(max_length=256, blank=True)
     note = models.TextField(blank=True)
-    date = models.DateField(default=timezone.now)
-    active = models.BooleanField(default=True)
+    date_booked = models.DateField(blank=True, null=True)
+    # active = models.BooleanField(default=False)
+    status = models.CharField(
+        max_length=50,
+        choices=AppointmentStatus.choices,
+        default=AppointmentStatus.Pending,
+    )
     completed = models.BooleanField(default=False)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
 
     def __str__(self):
         return f"Appointment at {self.created_at}"
 
     class Meta:
-        ordering = ["-date", "-updated_at"]
-        indexes = [models.Index(fields=["-date", "-updated_at"])]
+        ordering = ["-date_booked", "-updated_at"]
+        indexes = [models.Index(fields=["-date_booked", "-updated_at"])]
         constraints = [
             UniqueConstraint(
                 name="unique_appointment",
-                fields=["patient", "practitioner", "date"],
+                fields=["patient", "practitioner", "date_booked"],
                 violation_error_message=(
                     "You have booked an appointment with this practitioner"
                 ),
@@ -54,5 +63,12 @@ class Appointment(TimeBasedModel):
             )
 
     def save(self, *args, **kwargs):
+        if self.start_date:
+            self.date_booked = self.start_date.date()
         self.full_clean()
         super().save(*args, **kwargs)
+
+    @hook(AFTER_UPDATE, when="completed", has_changed=True)
+    def update_end_date(self):
+        """This function updates the end_date of appointment after completed"""
+        self.updated_at = timezone.now()

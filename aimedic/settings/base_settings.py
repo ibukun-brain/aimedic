@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "chats",
     "practitioner",
     "appointments",
+    "classification",
     # third party libraries
     "corsheaders",
     "django_q",

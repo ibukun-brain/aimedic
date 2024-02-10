@@ -1,7 +1,7 @@
 import dj_database_url
 
 from aimedic.settings.base_settings import *
-from aimedic.settings.local.email_settings import *
+from aimedic.settings.local.mailhog_settings import *
 from aimedic.settings.packages.cors_origin_settings import *
 
 # SECURITY WARNING: keep the secret key used in production secret!

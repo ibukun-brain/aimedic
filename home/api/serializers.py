@@ -73,9 +73,7 @@ class GenerateOTPSerializer(BaseOTPSerializer):
         message = f"Hi there, your otp is {otp}\nexpires in 10 minutes"
         # async_task(send_user_otp_task, user, subject, message)
         thread = threading.Thread(
-            target=send_user_otp_task,
-            args=[user, subject, message, otp],
-            daemon=True
+            target=send_user_otp_task, args=[user, subject, message, otp], daemon=True
         )
         thread.start()
         # i don't know if django_q will run on vercel but i will assume,
@@ -118,14 +116,10 @@ class ResendOTPSerializer(BaseOTPSerializer):
         subject = "OTP Verification"
         message = f"Hi there, your otp is {otp}\nexpires in 10 minutes"
         thread_send_email = threading.Thread(
-            target=send_email_task,
-            args=[subject, message, email, otp],
-            daemon=True
+            target=send_email_task, args=[subject, message, email, otp], daemon=True
         )
         thread_send_otp = threading.Thread(
-            target=send_user_otp_task,
-            args=[subject, message, email, otp],
-            daemon=True
+            target=send_user_otp_task, args=[subject, message, email, otp], daemon=True
         )
         thread_send_email.start()
         thread_send_otp.start()

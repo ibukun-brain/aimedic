@@ -9,7 +9,7 @@ from home.api.serializers import (
 )
 
 
-class AllowAnyPermissionMixins():
+class AllowAnyPermissionMixins:
     permission_classes = [permissions.AllowAny]
 
 
