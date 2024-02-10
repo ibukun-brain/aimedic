@@ -8,13 +8,13 @@ from practitioner.models import Practitioner, PractitionerPatient
 
 
 class PractitionerSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()
+    name = serializers.CharField(source="user.get_full_name")
 
     class Meta:
         model = Practitioner
         fields = [
             "id",
-            "user",
+            "name",
             "office_address",
             "city",
             "state",

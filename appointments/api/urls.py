@@ -11,18 +11,28 @@ urlpatterns = [
         name="appointment-patients",
     ),
     path(
+        "patients/<uuid:appointment_id>/",
+        views.PatientAppointmentDetailAPIView.as_view(),
+        name="appointment-patients-detail",
+    ),
+    path(
+        "patients/pending/",
+        views.PatientPendingAppointmentListAPIView.as_view(),
+        name="appointment-patients-pending",
+    ),
+    path(
+        "practitioners/request/",
+        views.PractitionerAppointmentRequestListAPIView.as_view(),
+        name="appointment-requests",
+    ),
+    path(
         "practitioners/<uuid:practitioner_id>/",
         views.PatientAppointmentCreateAPIView.as_view(),
         name="appointment-patients-create",
     ),
     path(
-        "practitioner/<uuid:appointment_id>/",
-        views.PractitionerAcceptAppointmentDetailAPIView.as_view(),
-        name="appointment-patients-detail",
-    ),
-    path(
-        "patients/<uuid:appointment_id>/accept/",
-        views.PractitionerAcceptAppointmentUpdateAPIView.as_view(),
+        "practitioners/<uuid:appointment_id>/accept/",
+        views.PractitionerAppointmentCreateAPIView.as_view(),
         name="appointment-accept-patients",
     ),
     path(

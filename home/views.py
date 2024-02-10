@@ -9,10 +9,7 @@ def run_cronjob(request):
         subject="Cron job",
         message="cron job ran",
         from_email=DEFAULT_FROM_EMAIL,
-        recipient_list=[
-            "ibukunolaifa@gmail.com",
-            "ibukunolaifa1984@gmail.com"
-        ],
+        recipient_list=["ibukunolaifa@gmail.com", "ibukunolaifa1984@gmail.com"],
     )
     print("running cronjob")
     return HttpResponse("Ok")

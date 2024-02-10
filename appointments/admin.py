@@ -10,11 +10,12 @@ class AppointmentAdmin(admin.ModelAdmin):
         "practitioner",
         "link",
         "created_at",
-        "active",
+        "end_date",
+        "status",
         "completed",
     ]
     list_select_related = ["patient", "practitioner"]
     raw_id_fields = ["patient", "practitioner"]
     date_hierarchy = "created_at"
     search_fields = ["=patient__email", "=practitioner__email"]
-    list_filter = ["active", "completed", "created_at"]
+    list_filter = ["status", "completed", "created_at"]
