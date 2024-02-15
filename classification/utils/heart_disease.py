@@ -21,7 +21,7 @@ class HeartDisease:
             data_response = requests.post(url=data_url, json=data_body).json()
 
         except Exception as e:
-            raise Exception(f"Error encountered: {e}")
+            raise Exception(f"Error encountered: {e}") from e
 
         dataset_url = data_response["data"]
         return dataset_url
@@ -46,7 +46,7 @@ class HeartDisease:
             ).json()
 
         except Exception as e:
-            raise Exception(f"Error encountered: {e}")
+            raise Exception(f"Error encountered: {e}") from e
 
         predicted_url = model_response["pred_url"]
         return predicted_url
@@ -58,13 +58,12 @@ class HeartDisease:
         if prediction_url is not None:
             try:
                 pred_data = requests.get(prediction_url).text
-                pred = pred_data[-2]
-                return pred
             except Exception as e:
-                raise Exception(f"Error encountered : {e}")
+                raise Exception(f"Error encountered : {e}") from e
+            pred = pred_data[-2]
+            return pred
 
-        else:
-            raise Exception("prediction url fetch failed")
+        raise Exception("prediction url fetch failed")
 
 
 # if __name__ == "__main__":

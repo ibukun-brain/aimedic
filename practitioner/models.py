@@ -1,16 +1,18 @@
 import auto_prefetch
-from django.core.cache import cache
+
+# from django.core.cache import cache
 from django.db import models
 from django.forms import ValidationError
-from django_lifecycle import (
-    AFTER_DELETE,
-    AFTER_SAVE,
-    AFTER_UPDATE,
-    LifecycleModelMixin,
-    hook,
-)
 
 from aimedic.utils.models import TimeBasedModel
+
+# from django_lifecycle import (
+#     AFTER_DELETE,
+#     AFTER_SAVE,
+#     AFTER_UPDATE,
+#     LifecycleModelMixin,
+#     hook,
+# )
 
 
 class Practitioner(TimeBasedModel):
@@ -43,7 +45,7 @@ class Practitioner(TimeBasedModel):
         return self.operations.count()
 
 
-class PractitionerPatient(LifecycleModelMixin, TimeBasedModel):
+class PractitionerPatient(TimeBasedModel):
     # patients = auto_prefetch.ForeignKey(
     #     "home.CustomUser",
     #     on_delete=models.CASCADE
@@ -66,12 +68,12 @@ class PractitionerPatient(LifecycleModelMixin, TimeBasedModel):
     def __str__(self):
         return f"Dr. {self.practitioner} x {self.patient}"
 
-    @hook(AFTER_SAVE)
-    @hook(AFTER_UPDATE)
-    @hook(AFTER_DELETE)
-    def invalidate_cache(self):
-        cache.delete("patient_list")
-        cache.delete("practitioner_list")
+    # @hook(AFTER_SAVE)
+    # @hook(AFTER_UPDATE)
+    # @hook(AFTER_DELETE)
+    # def invalidate_cache(self):
+    #     cache.delete("patient_list")
+    #     cache.delete("practitioner_list")
 
     def clean(self):
         if self.practitioner.user == self.patient:

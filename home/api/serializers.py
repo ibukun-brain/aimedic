@@ -71,7 +71,7 @@ class GenerateOTPSerializer(BaseOTPSerializer):
         otp = self.generate_otp(interval=validated_data.get("interval")).now()
         subject = "OTP Verification"
         message = f"Hi there, your otp is {otp}\nexpires in 10 minutes"
-        # async_task(send_user_otp_task, user, subject, message)
+        # st_task(send_user_otp_task, user, subject, message)
         thread = threading.Thread(
             target=send_user_otp_task, args=[user, subject, message, otp], daemon=True
         )
@@ -177,17 +177,6 @@ class CustomUserCreateSerializer(UserCreateSerializer):
             "gender",
             "password",
         ]
-        extra_kwargs = {
-            # "first_name": {
-            #     "read_only": True,
-            # },
-            # "last_name": {
-            #     "read_only": True,
-            # },
-            # "type": {
-            #     "read_only": True,
-            # }
-        }
 
 
 class CustomUserSerializer(UserSerializer):

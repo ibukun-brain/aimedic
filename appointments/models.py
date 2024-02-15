@@ -7,6 +7,7 @@ from django_lifecycle import AFTER_UPDATE, LifecycleModelMixin, hook
 
 from aimedic.utils.choices import AppointmentStatus
 from aimedic.utils.models import TimeBasedModel
+from chats.models import UserPractitionerChannel
 from practitioner.models import PractitionerPatient
 
 
@@ -70,5 +71,20 @@ class Appointment(LifecycleModelMixin, TimeBasedModel):
 
     @hook(AFTER_UPDATE, when="completed", has_changed=True)
     def update_end_date(self):
-        """This function updates the end_date of appointment after completed"""
+        """This function/hook updates the end_date of appointment after completed"""
         self.updated_at = timezone.now()
+
+    @hook(
+        AFTER_UPDATE,
+        when="status",
+        was=AppointmentStatus.Pending,
+        is_now=AppointmentStatus.Active,
+    )
+    def create_patient_practitioner_(self):
+        """This function/hook updates when the practitioner accepts an appointment"""
+        practitioner_patient, _ = PractitionerPatient.objects.get_or_create(
+            practitioner=self.practitioner, patient=self.patient
+        )
+        _user_practitioner_channel, _ = UserPractitionerChannel.objects.get_or_create(
+            chat=practitioner_patient
+        )

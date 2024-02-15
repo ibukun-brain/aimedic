@@ -12,7 +12,7 @@ SPECTACULAR_SETTINGS = {
     "ENUM_NAME_OVERRIDES": {
         "FastingBloodSugarEnum": SerializerFastingBloodSugarChoices.choices,
         "SlopeEnum": SerializerSlopeChoices.choices,
-    }
+    },
     # "SWAGGER_UI_DIST": "SIDECAR",
     # "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
 }

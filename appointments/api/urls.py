@@ -15,15 +15,20 @@ urlpatterns = [
         views.PatientAppointmentDetailAPIView.as_view(),
         name="appointment-patients-detail",
     ),
-    path(
-        "patients/pending/",
-        views.PatientPendingAppointmentListAPIView.as_view(),
-        name="appointment-patients-pending",
-    ),
+    # path(
+    #     "patients/pending/",
+    #     views.PatientPendingAppointmentListAPIView.as_view(),
+    #     name="appointment-patients-pending",
+    # ),
     path(
         "practitioners/request/",
         views.PractitionerAppointmentRequestListAPIView.as_view(),
         name="appointment-requests",
+    ),
+    path(
+        "practitioners/upcoming/",
+        views.PractitionerApointmentUpcomingAPIView.as_view(),
+        name="appointment-upcoming",
     ),
     path(
         "practitioners/<uuid:practitioner_id>/",

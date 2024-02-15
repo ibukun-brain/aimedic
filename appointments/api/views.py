@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from drf_spectacular.utils import extend_schema
 from rest_framework import generics, permissions
 
@@ -15,22 +16,43 @@ from appointments.api.serializers import (
 from appointments.models import Appointment
 from practitioner.models import Practitioner
 
+# class PatientPendingAppointmentListAPIView(generics.ListAPIView):
+#     """
+#     Endpoint for patient pending appointment that has not been accepted
+#     by the doctor/practitioner
+#     """
+#     serializer_class = PatientAppointmentSerializer
+#     queryset = Appointment.objects.all()
 
-class PatientPendingAppointmentListAPIView(generics.ListAPIView):
-    """
-    Endpoint for patient pending appointment that has not been accepted
-    by the doctor/practitioner
-    """
+#     @extend_schema(summary="patient's pending appointment")
+#     def get(self, request, *args, **kwargs):
+#         return self.list(request, *args, **kwargs)
 
-    serializer_class = PatientAppointmentSerializer
+#     def get_queryset(self):
+#         qs = Appointment.objects.select_related("patient", "practitioner",).filter(
+# patient=self.request.user, status=AppointmentStatus.Pending, completed=False
+#         )
+#         return qs
 
-    @extend_schema(summary="patient's pending appointment")
+
+class PractitionerApointmentUpcomingAPIView(generics.ListAPIView):
+    serializer_class = PractitionerAppointmentSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        custom_permissions.IsPractitionerOrReadOnly,
+    ]
+    queryset = Appointment.objects.all()
+
+    @extend_schema(summary="practitioner upcoming request")
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
     def get_queryset(self):
         qs = Appointment.objects.select_related("patient", "practitioner",).filter(
-            patient=self.request.user, status=AppointmentStatus.Pending, completed=False
+            practitioner=self.request.user.practitioner,
+            status=AppointmentStatus.Active,
+            start_date__gte=timezone.now(),
+            completed=False,
         )
         return qs
 
@@ -63,14 +85,16 @@ class PractitionerAppointmentRequestListAPIView(generics.ListAPIView):
 class PatientAppointmentListAPIView(generics.ListAPIView):
     serializer_class = PatientAppointmentSerializer
     queryset = Appointment.objects.all()
+    filterset_fields = ["status"]
 
-    @extend_schema(summary="patient's active appointments")
+    @extend_schema(summary="patient's appointments")
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
     def get_queryset(self):
         qs = Appointment.objects.select_related("patient", "practitioner",).filter(
-            patient=self.request.user, status=AppointmentStatus.Active, completed=False
+            patient=self.request.user,
+            # status=AppointmentStatus.Active, completed=False
         )
         return qs
 
@@ -118,7 +142,10 @@ class PatientAppointmentCreateAPIView(generics.CreateAPIView):
     serializer_class = PatientCreateAppointmentSerializer
     queryset = Appointment.objects.all()
 
-    @extend_schema(summary="create appointment with practitioner")
+    @extend_schema(
+        summary="create appointment with practitioner",
+        parameters=[PatientCreateAppointmentSerializer],
+    )
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
@@ -136,14 +163,15 @@ class PractitionerAppointmentListAPIView(generics.ListAPIView):
         custom_permissions.IsPractitionerOrReadOnly,
     ]
     queryset = Appointment.objects.all()
+    filterset_fields = ["status"]
 
     @extend_schema(summary="practitioner's appointments")
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
     def get_queryset(self):
-        qs = Appointment.objects.select_related("patient", "practitioner",).filter(
-            practitioner=self.request.user.practitioner, status=AppointmentStatus.Active
+        qs = Appointment.objects.select_related("patient", "practitioner").filter(
+            practitioner=self.request.user.practitioner,
         )
         return qs
 
@@ -155,9 +183,13 @@ class PractitionerAppointmentCreateAPIView(generics.CreateAPIView):
         custom_permissions.IsPractitionerOrReadOnly,
     ]
 
-    @extend_schema(summary="accept/decline appointments sent to practitioner")
+    @extend_schema(
+        summary="accept/decline appointments sent to practitioner",
+    )
     def post(self, request, *args, **kwargs):
-        """Endpoint to acccept appointment sent to the practitioner"""
+        """
+        Endpoint to acccept appointment sent to the practitioner
+        """
         return self.create(request, *args, **kwargs)
 
     def get_object(self):
