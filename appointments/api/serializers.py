@@ -19,6 +19,7 @@ class PatientCreateAppointmentSerializer(serializers.ModelSerializer):
     duration = serializers.ChoiceField(
         choices=AppointmentDurationStatus.choices,
         write_only=True,
+        help_text="Duration in hours",
     )
 
     class Meta:
@@ -90,8 +91,8 @@ class PatientAppointmentSerializer(serializers.ModelSerializer):
 
 class PractitionerAcceptOrDeclineAppointmentSerializer(serializers.ModelSerializer):
     appointment_id = serializers.HiddenField(default="")
-    practitioner = serializers.StringRelatedField()
-    patient = serializers.StringRelatedField()
+    practitioner = serializers.StringRelatedField(read_only=True)
+    patient = serializers.StringRelatedField(read_only=True)
     accept = serializers.BooleanField(
         help_text="Accept or decline appointments", write_only=True
     )

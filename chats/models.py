@@ -1,15 +1,17 @@
 import auto_prefetch
-from django.core.cache import cache
+
+# from django.core.cache import cache
 from django.db import models
 from django.forms import ValidationError
 from django.template.defaultfilters import truncatechars
-from django_lifecycle import (
-    AFTER_DELETE,
-    AFTER_SAVE,
-    AFTER_UPDATE,
-    LifecycleModelMixin,
-    hook,
-)
+
+# from django_lifecycle import (
+#     AFTER_DELETE,
+#     AFTER_SAVE,
+#     AFTER_UPDATE,
+#     LifecycleModelMixin,
+#     hook,
+# )
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema_field
 
@@ -87,7 +89,7 @@ class UserPractitionerChannel(TimeBasedModel):
         indexes = [models.Index(fields=["-created_at"])]
 
 
-class UserPractitionerChannelChat(LifecycleModelMixin, TimeBasedModel):
+class UserPractitionerChannelChat(TimeBasedModel):
     channel = auto_prefetch.ForeignKey(
         "chats.UserPractitionerChannel", on_delete=models.CASCADE, related_name="chats"
     )
@@ -122,11 +124,11 @@ class UserPractitionerChannelChat(LifecycleModelMixin, TimeBasedModel):
         ordering = ["created_at"]
         indexes = [models.Index(fields=["created_at"])]
 
-    @hook(AFTER_SAVE)
-    @hook(AFTER_UPDATE)
-    @hook(AFTER_DELETE)
-    def invalidate_cache(self):
-        cache.delete("user_practitioner_channel")
+    # @hook(AFTER_SAVE)
+    # @hook(AFTER_UPDATE)
+    # @hook(AFTER_DELETE)
+    # def invalidate_cache(self):
+    #     cache.delete("user_practitioner_channel")
 
 
 # class PractitionerChannelChat(TimeBasedModel):

@@ -1,7 +1,9 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import generics, permissions, serializers
 
 from home.api import custom_permissions
 from practitioner.api.serializers import (
+    PractitionerCreateSerializer,
     PractitionerOverviewSerializer,
     PractitionerPatientSerializer,
     PractitionerSerializer,
@@ -9,16 +11,33 @@ from practitioner.api.serializers import (
 from practitioner.models import Practitioner, PractitionerPatient
 
 
-class PractitionerListCreateAPIView(generics.ListCreateAPIView):
+class PractitionerSignupCreateAPIView(generics.CreateAPIView):
+    serializer_class = PractitionerCreateSerializer
+    permission_classes = [permissions.AllowAny]
+
+    @extend_schema(
+        summary="signup as a doctor/practitioner",
+        parameters=[
+            # PractitionerCreateSerializer,
+        ],
+    )
+    def post(self, request, *args, **kwargs):
+        """Use this endpoint to signup as a doctor/practitioner"""
+        return self.create(request, *args, **kwargs)
+
+
+class PractitionerListAPIView(generics.ListAPIView):
     serializer_class = PractitionerSerializer
     queryset = Practitioner.objects.none()
+
+    @extend_schema(summary="all doctors/practitioners listing")
+    def get(self, request, *args, **kwargs):
+        """This endpoint returns all doctors/practitioners listing"""
+        return self.list(request, *args, **kwargs)
 
     def get_queryset(self):
         qs = Practitioner.objects.select_related("user").all()
         return qs
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
 
 
 class PractitionerOverviewAPIView(generics.RetrieveAPIView):

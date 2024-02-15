@@ -73,7 +73,8 @@ class HeartClassificationSerializer(serializers.Serializer):
     )
 
     def create(self, validated_data):
-        dataset = list(map(str, validated_data.values()))
+        # dataset = list(map(str, validated_data.values()))
+        dataset = [str(value) for value in validated_data.values()]
         # thread = threading.Thread(
         #     target=heart_disease_classifier_task,
         #     # daemon=True

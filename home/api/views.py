@@ -14,18 +14,22 @@ class AllowAnyPermissionMixins:
 
 
 class GenerateOTPAPIView(AllowAnyPermissionMixins, generics.GenericAPIView):
-    """Generate otp with email and password"""
+    """
+    If the request is successful, an otp is sent to the user's email
+    Verify the otp at the /verify endpoint to get the access token
+    to be used for authenticating the user
+    """
 
     serializer_class = GenerateOTPSerializer
 
     @extend_schema(
-        summary="Generate OTP with email and password",
+        summary="Login endpoint for both patients and doctors/practitioners",
         responses={
             status.HTTP_200_OK: OpenApiResponse(
                 response={
                     "success": True,
                     "user": "user@email.com",
-                    "message": "Login Successful. OTP sent",
+                    "message": "OTP sent",
                 },
                 description="Success",
                 examples=[
@@ -34,7 +38,7 @@ class GenerateOTPAPIView(AllowAnyPermissionMixins, generics.GenericAPIView):
                         value={
                             "success": True,
                             "user": "user@email.com",
-                            "message": "Login Successful. OTP sent",
+                            "message": "OTP sent",
                         },
                     )
                 ],
@@ -63,7 +67,7 @@ class VerifyOTPAPIView(AllowAnyPermissionMixins, generics.GenericAPIView):
 
     @extend_schema(
         methods=["POST"],
-        summary="Verify OTP",
+        summary="Verify OTP sent to the user email",
         responses={
             status.HTTP_200_OK: OpenApiResponse(
                 response={

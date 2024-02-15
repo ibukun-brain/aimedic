@@ -5,8 +5,8 @@ from aimedic.utils.env_variable import get_env_variable
 EMAIL_HOST_USER = get_env_variable("EMAIL_HOST_USER", "XXX")
 EMAIL_HOST_PASSWORD = get_env_variable("EMAIL_HOST_PASSWORD", "XXX")
 # EMAIL_HOST_PASSWORD = (
-    # "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"
-    # or get_env_variable("EMAIL_HOST_PASSWORD", "XXX")
+# "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"
+# or get_env_variable("EMAIL_HOST_PASSWORD", "XXX")
 # )
 
 EMAIL_PORT = get_env_variable("EMAIL_PORT", "XXX")
