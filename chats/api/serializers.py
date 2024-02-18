@@ -200,6 +200,7 @@ class UserImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
+            "id",
             "name",
             "image_url",
         ]
@@ -235,5 +236,5 @@ class UserPractitionerChatSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data["details"] = data.pop("practitioner")["user"]
+        data["practitioner"] = data.pop("practitioner")["user"]
         return data

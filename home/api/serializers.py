@@ -1,18 +1,14 @@
 import threading
 
 import pyotp
-from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.utils import timezone
 
 # from django_q.tasks import async_task
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import extend_schema_field
 from rest_framework import exceptions, serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from aimedic.utils.urls import get_url
 from home.models import CustomUser
 from home.tasks import send_email_task, send_user_otp_task
 
@@ -180,16 +176,16 @@ class CustomUserCreateSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
-    image = serializers.SerializerMethodField("_image_url")
+    # image = serializers.SerializerMethodField("_image_url")
 
-    @extend_schema_field(OpenApiTypes.URI)
-    def _image_url(self, obj):
-        request = self.context["request"]
-        url = get_url(request, path_str=None, default=settings.STATIC_URL)
-        if obj.profile_pic:
-            return obj.profile_pic.url
+    # @extend_schema_field(OpenApiTypes.URI)
+    # def _image_url(self, obj):
+    #     request = self.context["request"]
+    #     url = get_url(request, path_str=None, default=settings.STATIC_URL)
+    #     if obj.profile_pic:
+    #         return obj.profile_pic.url
 
-        return f"{url}image/placeholder.jpg"
+    #     return f"{url}image/placeholder.jpg"
 
     class Meta(UserSerializer.Meta):
         model = CustomUser
@@ -199,7 +195,7 @@ class CustomUserSerializer(UserSerializer):
             "last_name",
             # "type",
             "gender",
-            "image",
+            "profile_pic",
             "email",
             "age",
         )

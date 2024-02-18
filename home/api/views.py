@@ -2,11 +2,13 @@ from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
+from chats.api.serializers import UserPractitionerChatSerializer
 from home.api.serializers import (
     GenerateOTPSerializer,
     ResendOTPSerializer,
     VerifyOTPSerializer,
 )
+from practitioner.models import PractitionerPatient
 
 
 class AllowAnyPermissionMixins:
@@ -132,3 +134,22 @@ class ResendOTPAPIView(AllowAnyPermissionMixins, generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=200)
+
+
+class PatientPractitionerListAPIView(generics.ListAPIView):
+    serializer_class = UserPractitionerChatSerializer
+    queryset = PractitionerPatient.objects.all()
+
+    @extend_schema(summary="patient's practitioner/doctors listing")
+    def get(self, request, *args, **kwargs):
+        """
+        The endpoint returns the patient's doctors/practitioners, basically
+        the doctors/practitioners are those who has accepted an appointment
+        request from the doctors
+        """
+        return self.list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        patient = self.request.user
+        qs = PractitionerPatient.objects.filter(patient=patient)
+        return qs

@@ -4,9 +4,15 @@ from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+from home.api.views import PatientPractitionerListAPIView
 from home.views import run_cronjob
 
 urlpatterns = [
+    path(
+        "api/patient/",
+        PatientPractitionerListAPIView.as_view(),
+        name="patients-practitioner",
+    ),
     path("api/cron/", run_cronjob, name="cronjob"),
     path(
         "api/appointments/", include("appointments.api.urls", namespace="appointments")
@@ -15,6 +21,9 @@ urlpatterns = [
     path(
         "api/classification/",
         include("classification.api.urls", namespace="classification"),
+    ),
+    path(
+        "api/notifications/", include("notification.api.urls", namespace="notification")
     ),
     path(
         "api/practitioners/", include("practitioner.api.urls", namespace="practitioner")

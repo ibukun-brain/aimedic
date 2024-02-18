@@ -34,15 +34,11 @@ class Practitioner(TimeBasedModel):
 
     @property
     def total_appointments(self) -> int:
-        return self.appointments.count()
+        return self.appointments.filter(status="active").count()
 
     @property
     def total_patients(self) -> int:
-        return self.patients.all().count()
-
-    @property
-    def total_operations(self) -> int:
-        return self.operations.count()
+        return self.practitioner_patient.count()
 
 
 class PractitionerPatient(TimeBasedModel):
