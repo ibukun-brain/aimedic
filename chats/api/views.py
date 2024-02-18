@@ -1,7 +1,8 @@
 import threading
 
 import pusher
-from django.core.cache import cache
+
+# from django.core.cache import cache
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 
@@ -151,16 +152,16 @@ class UserPractitionerChatListAPIView(generics.ListAPIView):
         qs = PractitionerPatient.objects.select_related("patient", "practitioner")
         request = self.request
         if request.user.is_practitioner:
-            cache_obj = cache.get("patient_list")
-            if cache_obj is None:
-                qs = qs.filter(practitioner=request.user.practitioner)
-                cache.set("patient_list", qs)
+            # cache_obj = cache.get("patient_list")
+            # if cache_obj is None:
+            qs = qs.filter(practitioner=request.user.practitioner)
+            # cache.set("patient_list", qs)
             return qs
         # if user is a patient
-        cache_obj = cache.get("practitioner_list")
-        if cache_obj is None:
-            qs = qs.filter(patient=request.user)
-            cache.set("patient_list", qs)
+        # cache_obj = cache.get("practitioner_list")
+        # if cache_obj is None:
+        qs = qs.filter(patient=request.user)
+        # cache.set("patient_list", qs)
         return qs
 
     def get_serializer_class(self):

@@ -18,7 +18,7 @@ urlpatterns = [
     ),
     path(
         "patients/",
-        views.PractitionerPatientsListCreateAPIView.as_view(),
+        views.PractitionerPatientsListAPIView.as_view(),
         name="practitioner-patients",
     ),
 ]

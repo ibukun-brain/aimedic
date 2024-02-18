@@ -43,7 +43,7 @@ class PractitionerApointmentUpcomingAPIView(generics.ListAPIView):
     ]
     queryset = Appointment.objects.all()
 
-    @extend_schema(summary="practitioner upcoming appointment")
+    @extend_schema(summary="practitioner upcoming appointments")
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 

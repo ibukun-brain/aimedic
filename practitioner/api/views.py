@@ -48,19 +48,34 @@ class PractitionerOverviewAPIView(generics.RetrieveAPIView):
     ]
     queryset = Practitioner.objects.all()
 
+    @extend_schema(
+        summary="doctors/practitioner overview",
+    )
+    def get(self, request, *args, **kwargs):
+        """Overview of the doctors/practitioners activities"""
+        return self.retrieve(request, *args, **kwargs)
+
     def get_object(self):
         user = self.request.user
         try:
-            return Practitioner.objects.get(user=user)
+            return Practitioner.objects.prefetch_related("practitioner_patient").get(
+                user=user
+            )
         except Practitioner.DoesNotExist as e:
             raise serializers.ValidationError(
                 {"error": "Practitioner does not exist"}
             ) from e
 
 
-class PractitionerPatientsListCreateAPIView(generics.ListCreateAPIView):
+class PractitionerPatientsListAPIView(generics.ListAPIView):
     serializer_class = PractitionerPatientSerializer
     queryset = PractitionerPatient.objects.all()
+
+    @extend_schema(summary="practitioner's patients listing")
+    def get(self, request, *args, **kwargs):
+        """
+        The endpoint returns the practitioner's patient"""
+        return self.list(request, *args, **kwargs)
 
     def get_queryset(self):
         practitioner = self.request.user.practitioner

@@ -33,26 +33,22 @@ class PractitionerCreateSerializer(UserCreateSerializer):
 
 class PractitionerSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source="user.get_full_name")
+    image = serializers.CharField(source="user.profile_pic")
+    gender = serializers.CharField(source="user.gender")
+    email = serializers.CharField(source="user.email")
 
     class Meta:
         model = Practitioner
         fields = [
             "id",
             "name",
+            "email",
+            "gender",
+            "image",
             "office_address",
             "city",
             "state",
-            "latitude",
-            "longitude",
         ]
-        extra_kwargs = {
-            "longitude": {
-                "read_only": True,
-            },
-            "latitude": {
-                "read_only": True,
-            },
-        }
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -73,7 +69,6 @@ class PractitionerOverviewSerializer(serializers.ModelSerializer):
         fields = [
             "total_appointments",
             "total_patients",
-            "total_operations",
         ]
 
 
@@ -94,5 +89,5 @@ class PractitionerPatientSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data["details"] = data.pop("patient")
+        # data["details"] = data.pop("patient")
         return data

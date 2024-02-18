@@ -6,7 +6,7 @@ app_name = "classification"
 
 urlpatterns = [
     path(
-        "heart-disease/",
+        "heart_disease/",
         views.HeartClassificationAPIView.as_view(),
         name="heart-classification",
     ),

@@ -11,6 +11,7 @@ class AppointmentStatus(models.TextChoices):
     Pending = ("pending", "Pending")
     Active = ("active", "Active")
     Cancelled = ("cancelled", "Cancelled")
+    Expired = ("expired", "Expired")
 
 
 class AppointmentDurationStatus(models.IntegerChoices):

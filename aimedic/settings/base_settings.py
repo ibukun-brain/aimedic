@@ -54,7 +54,9 @@ INSTALLED_APPS = [
     "practitioner",
     "appointments",
     "classification",
+    "notification",
     # third party libraries
+    "notifications",
     "corsheaders",
     "django_q",
     "django_filters",
