@@ -75,17 +75,22 @@ class PractitionerOverviewSerializer(serializers.ModelSerializer):
 class PractitionerPatientSerializer(serializers.ModelSerializer):
     chat_id = serializers.SerializerMethodField()  # chat or channel id
     patient = UserImageSerializer(many=False)
+    recent_message = serializers.SerializerMethodField()
 
     class Meta:
         model = PractitionerPatient
         fields = [
             "chat_id",
             "patient",
+            "recent_message",
         ]
 
     @extend_schema_field(OpenApiTypes.UUID)
     def get_chat_id(self, obj):
         return obj.userpractitionerchannel.pk
+
+    def get_recent_message(self, obj):
+        return obj.userpractitionerchannel.patient_recent_message
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

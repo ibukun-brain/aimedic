@@ -84,6 +84,27 @@ class UserPractitionerChannel(TimeBasedModel):
     def __str__(self):
         return str(self.id)
 
+    @property
+    def practitioner_recent_message(self):
+        try:
+            message = self.chats.filter(
+                practitioner=self.chat.practitioner
+            ).latest("created_at").text
+        except UserPractitionerChannelChat.DoesNotExist:
+            message = None
+        return message
+        # return self.chats._practitioner_recent_message
+
+    @property
+    def patient_recent_message(self):
+        try:
+            message = self.chats.filter(
+                patient=self.chat.patient
+            ).latest("created_at").text
+        except UserPractitionerChannelChat.DoesNotExist:
+            message = None
+        return message
+
     class Meta:
         ordering = ["-created_at"]
         indexes = [models.Index(fields=["-created_at"])]
@@ -98,9 +119,14 @@ class UserPractitionerChannelChat(TimeBasedModel):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
+        # related_name="",
     )
     practitioner = auto_prefetch.ForeignKey(
-        "practitioner.Practitioner", on_delete=models.CASCADE, null=True, blank=True
+        "practitioner.Practitioner",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        # related_name=""
     )
     text = models.TextField()
 
