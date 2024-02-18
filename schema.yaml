@@ -1,0 +1,2404 @@
+openapi: 3.0.3
+info:
+  title: Afrimed API
+  version: 0.0.0
+  description: The Afrimed aims to revolutionize healthcare in Africa by addressing
+    the severe shortage of Radiologists. Leveraging  AI innovative technology, this
+    solution aids medical image analysis to enhance patient-doctor interactions and
+    provide accurate diagnoses.
+paths:
+  /api/appointments/patients/:
+    get:
+      operationId: appointments_patients_list
+      summary: patient's appointments
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - active
+          - cancelled
+          - expired
+          - pending
+        description: |-
+          * `pending` - Pending
+          * `active` - Active
+          * `cancelled` - Cancelled
+          * `expired` - Expired
+      tags:
+      - appointments
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPatientAppointmentList'
+          description: ''
+  /api/appointments/patients/{appointment_id}/:
+    get:
+      operationId: appointments_patients_retrieve
+      summary: patient's active appointments detail
+      parameters:
+      - in: path
+        name: appointment_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - appointments
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientAppointment'
+          description: ''
+    put:
+      operationId: appointments_patients_update
+      description: Only pending appointments can be updated
+      summary: update patient's appointment
+      parameters:
+      - in: path
+        name: appointment_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - appointments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientAppointment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatientAppointment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatientAppointment'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientAppointment'
+          description: ''
+    patch:
+      operationId: appointments_patients_partial_update
+      summary: update patient's appointment
+      parameters:
+      - in: path
+        name: appointment_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - appointments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPatientAppointment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPatientAppointment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPatientAppointment'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientAppointment'
+          description: ''
+    delete:
+      operationId: appointments_patients_destroy
+      summary: delete patient's appointment
+      parameters:
+      - in: path
+        name: appointment_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - appointments
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/appointments/practitioners/:
+    get:
+      operationId: appointments_practitioners_list
+      summary: practitioner's appointments
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - active
+          - cancelled
+          - expired
+          - pending
+        description: |-
+          * `pending` - Pending
+          * `active` - Active
+          * `cancelled` - Cancelled
+          * `expired` - Expired
+      tags:
+      - appointments
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPractitionerAppointmentList'
+          description: ''
+  /api/appointments/practitioners/{appointment_id}/accept/:
+    post:
+      operationId: appointments_practitioners_accept_create
+      description: Endpoint to acccept appointment sent to the practitioner
+      summary: accept/decline appointments sent to practitioner
+      parameters:
+      - in: path
+        name: appointment_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - appointments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PractitionerAcceptOrDeclineAppointment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PractitionerAcceptOrDeclineAppointment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PractitionerAcceptOrDeclineAppointment'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PractitionerAcceptOrDeclineAppointment'
+          description: ''
+  /api/appointments/practitioners/{practitioner_id}/:
+    post:
+      operationId: appointments_practitioners_create
+      summary: create appointment with practitioner
+      parameters:
+      - in: query
+        name: duration
+        schema:
+          enum:
+          - 1
+          - 2
+          - 3
+          type: integer
+        description: |-
+          Duration in hours
+
+          * `1` - One
+          * `2` - Two
+          * `3` - Three
+        required: true
+      - in: query
+        name: patient
+        schema:
+          type: string
+      - in: query
+        name: practitioner
+        schema:
+          type: string
+      - in: path
+        name: practitioner_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: query
+        name: start_date
+        schema:
+          type: string
+          format: date-time
+        required: true
+      tags:
+      - appointments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientCreateAppointment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatientCreateAppointment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatientCreateAppointment'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientCreateAppointment'
+          description: ''
+  /api/appointments/practitioners/request/:
+    get:
+      operationId: appointments_practitioners_request_list
+      description: Endpoint for practitioner to see appointment request
+      summary: practitioner appointment request
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - appointments
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPractitionerAppointmentList'
+          description: ''
+  /api/appointments/practitioners/today/:
+    get:
+      operationId: appointments_practitioners_today_list
+      summary: practitioner appointment for the day
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - appointments
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPractitionerAppointmentList'
+          description: ''
+  /api/appointments/practitioners/upcoming/:
+    get:
+      operationId: appointments_practitioners_upcoming_list
+      summary: practitioner upcoming appointments
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - appointments
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPractitionerAppointmentList'
+          description: ''
+  /api/auth/otp/generate/:
+    post:
+      operationId: auth_otp_generate_create
+      description: |-
+        If the request is successful, an otp is sent to the user's email
+        Verify the otp at the /verify endpoint to get the access token
+        to be used for authenticating the user
+      summary: Login endpoint for both patients and doctors/practitioners
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateOTP'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GenerateOTP'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GenerateOTP'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                success: true
+                user: user@email.com
+                message: OTP sent
+              examples:
+                200OKResponse:
+                  value:
+                    success: true
+                    user: user@email.com
+                    message: OTP sent
+                  summary: 200 OK response
+          description: Success
+  /api/auth/otp/resend/:
+    post:
+      operationId: auth_otp_resend_create
+      description: Resend OTP
+      summary: Resend OTP
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResendOTP'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ResendOTP'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ResendOTP'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                success: true
+                message: OTP Sent
+                email: admin@example.com
+              examples:
+                200OKResponse:
+                  value:
+                    success: true
+                    message: OTP Sent
+                    email: admin@example.com
+                  summary: 200 OK response
+          description: Success
+  /api/auth/otp/verify/:
+    post:
+      operationId: auth_otp_verify_create
+      description: Verify OTP
+      summary: Verify OTP sent to the user email
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyOTP'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VerifyOTP'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VerifyOTP'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                success: true
+                message: OTP Verified
+                refresh: string
+                access: string
+              examples:
+                200OKResponse:
+                  value:
+                    success: true
+                    message: OTP Verified
+                    refresh: string
+                    access: string
+                  summary: 200 OK response
+          description: Success
+  /api/auth/users/:
+    get:
+      operationId: auth_users_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCustomUserList'
+          description: ''
+    post:
+      operationId: auth_users_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomUserCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomUserCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomUserCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUserCreate'
+          description: ''
+  /api/auth/users/{id}/:
+    get:
+      operationId: auth_users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this User.
+        required: true
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUser'
+          description: ''
+    put:
+      operationId: auth_users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this User.
+        required: true
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUser'
+          description: ''
+    patch:
+      operationId: auth_users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this User.
+        required: true
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUser'
+          description: ''
+    delete:
+      operationId: auth_users_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this User.
+        required: true
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/auth/users/activation/:
+    post:
+      operationId: auth_users_activation_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Activation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Activation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Activation'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activation'
+          description: ''
+  /api/auth/users/me/:
+    get:
+      operationId: auth_users_me_retrieve
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUser'
+          description: ''
+    put:
+      operationId: auth_users_me_update
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUser'
+          description: ''
+    patch:
+      operationId: auth_users_me_partial_update
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUser'
+          description: ''
+    delete:
+      operationId: auth_users_me_destroy
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/auth/users/resend_activation/:
+    post:
+      operationId: auth_users_resend_activation_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailReset'
+          description: ''
+  /api/auth/users/reset_email/:
+    post:
+      operationId: auth_users_reset_email_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailReset'
+          description: ''
+  /api/auth/users/reset_email_confirm/:
+    post:
+      operationId: auth_users_reset_email_confirm_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsernameResetConfirm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UsernameResetConfirm'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UsernameResetConfirm'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsernameResetConfirm'
+          description: ''
+  /api/auth/users/reset_password/:
+    post:
+      operationId: auth_users_reset_password_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailReset'
+          description: ''
+  /api/auth/users/reset_password_confirm/:
+    post:
+      operationId: auth_users_reset_password_confirm_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRetype'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRetype'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRetype'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordResetConfirmRetype'
+          description: ''
+  /api/auth/users/set_email/:
+    post:
+      operationId: auth_users_set_email_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetUsername'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SetUsername'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SetUsername'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetUsername'
+          description: ''
+  /api/auth/users/set_password/:
+    post:
+      operationId: auth_users_set_password_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetPasswordRetype'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SetPasswordRetype'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SetPasswordRetype'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetPasswordRetype'
+          description: ''
+  /api/chats/channels/chatbot/:
+    get:
+      operationId: chats_channels_chatbot_list
+      description: |-
+        This endpoint returns a channels for AI chat, A channel consists
+        of multiple chats to the AI
+      summary: Channel lists
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - chats
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Success
+        '401':
+          content:
+            application/json:
+              schema:
+                detail: Authentication credentials were not provided.
+              examples:
+                401UNAUTHORIZEDResponse:
+                  value:
+                    detail: Authentication credentials were not provided.
+                  summary: 401 UNAUTHORIZED Response
+          description: Unauthorized
+    post:
+      operationId: chats_channels_chatbot_create
+      tags:
+      - chats
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAIChat'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserAIChat'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserAIChat'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAIChat'
+          description: ''
+  /api/chats/channels/chatbot/{id}/:
+    get:
+      operationId: chats_channels_chatbot_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - chats
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelDetail'
+          description: ''
+    delete:
+      operationId: chats_channels_chatbot_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - chats
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/chats/channels/chatbot/{id}/rename/:
+    put:
+      operationId: chats_channels_chatbot_rename_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - chats
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Channel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Channel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Channel'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+          description: ''
+    patch:
+      operationId: chats_channels_chatbot_rename_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - chats
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedChannel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedChannel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedChannel'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+          description: ''
+  /api/chats/channels/chats/:
+    get:
+      operationId: chats_channels_chats_retrieve
+      tags:
+      - chats
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/chats/channels/chats/{chat_id}/send/:
+    post:
+      operationId: chats_channels_chats_send_create
+      description: Endpoint to create/send messages or chat
+      parameters:
+      - in: path
+        name: chat_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - chats
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPractitionerCreateChat'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserPractitionerCreateChat'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserPractitionerCreateChat'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPractitionerCreateChat'
+          description: ''
+  /api/chats/channels/chats/{id}/:
+    get:
+      operationId: chats_channels_chats_retrieve_2
+      description: Endpoint to view messages" between patient(user) and practitioner
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - chats
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPractitionerChannelDetail'
+          description: ''
+  /api/classification/heart_disease/:
+    post:
+      operationId: classification_heart_disease_create
+      summary: Endpoint for AI heart disease classification
+      parameters:
+      - in: query
+        name: age
+        schema:
+          type: integer
+        description: age of the person (in years)
+        required: true
+      - in: query
+        name: chest_pain_type
+        schema:
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          type: integer
+        description: |-
+          * `0` - Typical Angina
+          * `1` - Atypical Angina
+          * `2` - Non Angina
+          * `3` - Asymptomatic
+        required: true
+      - in: query
+        name: cholesterol
+        schema:
+          type: number
+          format: double
+        description: A person's serum cholesterol in mg/dl
+        required: true
+      - in: query
+        name: exang
+        schema:
+          enum:
+          - 1
+          - 0
+          type: integer
+        description: |-
+          Exercise-induced angina (AP) is a common complaint of cardiac patients, particularly when exercising in the cold. It usually happens during activity (exertion) and goes away with rest or angina medication.For example, pain, when walking uphill or in cold weather, maybe angina.Stable angina pain is predictable and usually similar to previous episodesof chest pain.
+
+          * `1` - Yes
+          * `0` - No
+        required: true
+      - in: query
+        name: fasting_blood_sugar
+        schema:
+          enum:
+          - 1
+          - 0
+          type: integer
+        description: |-
+          Blood sugar while fasting & [ > 120 mg/dl ] (1 = true; 0 = false)
+
+          * `1` - True
+          * `0` - False
+        required: true
+      - in: query
+        name: max_hr
+        schema:
+          type: number
+          format: double
+        description: Maximum heart rate achieved
+        required: true
+      - in: query
+        name: num_major_vessels
+        schema:
+          type: integer
+          maximum: 3
+          minimum: 0
+        description: no. of major vessels (0-3) colored by flourosopy
+        required: true
+      - in: query
+        name: oldpeak
+        schema:
+          type: number
+          format: double
+        description: ST depression induced by exercise relative to restExercise-induced
+          ST segment depression is considered a reliable ECGfinding for the diagnosis
+          of obstructive coronary atherosclerosis.ST-segment depression is believed
+          as a common electrocardiographicsign of myocardial ischemia during exercise
+          testing. Ischemia is generallydefined as oxygen deprivation due to reduced
+          perfusion.ST segment depression less than 0.5 mm is accepted in all leads.
+          ST segment depression 0.5 mm or more is considered pathological.
+        required: true
+      - in: query
+        name: restecg
+        schema:
+          enum:
+          - 0
+          - 1
+          - 2
+          type: integer
+        description: |-
+          * `0` - Normal
+          * `1` - Wave Abnormality
+          * `2` - Ventricular Hypertrophy
+        required: true
+      - in: query
+        name: resting_bp
+        schema:
+          type: number
+          format: double
+        description: blood pressure while resting (in mm Hg on admission to the hospital)
+        required: true
+      - in: query
+        name: sex
+        schema:
+          enum:
+          - 1
+          - 0
+          type: integer
+        description: |-
+          gender of the person (1 = male; 0 = female)
+
+          * `1` - Male
+          * `0` - Female
+        required: true
+      - in: query
+        name: slope
+        schema:
+          enum:
+          - 0
+          - 1
+          - 2
+          type: integer
+        description: |-
+          * `0` - Unsloping
+          * `1` - Flat
+          * `2` - Downsloping
+        required: true
+      - in: query
+        name: thalassemia
+        schema:
+          enum:
+          - 0
+          - 1
+          - 2
+          type: integer
+        description: |-
+          People with thalassemia can get too much iron in their bodies,either from the disease or from frequent blood transfusions. Too much iron can result in damage to your heart, liver,& endocrine system which includes hormone-producing glandsthat regulate processes throughout your body.
+
+          * `0` - Normal
+          * `1` - Fixed Defect
+          * `2` - Reversable Defect
+        required: true
+      tags:
+      - classification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HeartClassification'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HeartClassification'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HeartClassification'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeartClassification'
+          description: ''
+  /api/notifications/:
+    get:
+      operationId: notifications_list
+      description: All notifications including read and unread notification
+      summary: All notifications
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=4
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=2
+                  results:
+                    type: array
+                    items:
+                      slug: 123123
+                      timestamp: '2024-02-18T10:42:31.385Z'
+                      natural_time: 2s ago
+                      sender:
+                        id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                        name: Ayanokoji Kenjaku
+                        image_url: string
+                      unread: true
+                      verb: You have an appointment request
+                      description: Ayanokoji Kenjaku sent an appointmentrequest, accept
+                        or decline.
+              examples:
+                UnreadNotification:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - slug: 123123
+                      timestamp: '2024-02-18T10:42:31.385Z'
+                      natural_time: 2s ago
+                      sender:
+                        id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                        name: Ayanokoji Kenjaku
+                        image_url: string
+                      unread: true
+                      verb: You have an appointment request
+                      description: Ayanokoji Kenjaku sent an appointmentrequest, accept
+                        or decline.
+                  summary: unread notification
+                ReadNotification:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - slug: 123123
+                      timestamp: '2024-02-18T10:42:31.385Z'
+                      natural_time: 2s ago
+                      sender:
+                        id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                        name: Ayanokoji Kenjaku
+                        image_url: string
+                      unread: false
+                      verb: You have an appointment request
+                      description: Ayanokoji Kenjaku sent an appointmentrequest, accept
+                        or decline.
+                  summary: read notification
+          description: ''
+  /api/notifications/read_notification/{slug}/:
+    get:
+      operationId: notifications_read_notification_retrieve
+      description: This endpoint mark a notification instance as read
+      summary: read notification
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                slug: 123123
+                timestamp: '2024-02-18T10:42:31.385Z'
+                natural_time: 2s ago
+                sender:
+                  id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                  name: Ayanokoji Kenjaku
+                  image_url: string
+                unread: false
+                verb: You have an appointment request
+                description: Ayanokoji Kenjaku sent an appointment request, accept
+                  or decline.
+              examples:
+                ReadNotification:
+                  value:
+                    slug: 123123
+                    timestamp: '2024-02-18T10:42:31.385Z'
+                    natural_time: 2s ago
+                    sender:
+                      id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                      name: Ayanokoji Kenjaku
+                      image_url: string
+                    unread: false
+                    verb: You have an appointment request
+                    description: Ayanokoji Kenjaku sent an appointment request, accept
+                      or decline.
+                  summary: read notification
+          description: ''
+  /api/patients/:
+    get:
+      operationId: patients_list
+      description: |-
+        The endpoint returns the patient's doctors/practitioners, basically
+        the doctors/practitioners are those who has accepted an appointment
+        request from the doctors
+      summary: patient's practitioner/doctors listing
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - patients
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserPractitionerChatList'
+          description: ''
+  /api/practitioners/:
+    get:
+      operationId: practitioners_list
+      description: This endpoint returns all doctors/practitioners listing
+      summary: all doctors/practitioners listing
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - practitioners
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPractitionerList'
+          description: ''
+  /api/practitioners/overview/:
+    get:
+      operationId: practitioners_overview_retrieve
+      description: Overview of the doctors/practitioners activities
+      summary: doctors/practitioner overview
+      tags:
+      - practitioners
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PractitionerOverview'
+          description: ''
+  /api/practitioners/patients/:
+    get:
+      operationId: practitioners_patients_list
+      description: The endpoint returns the practitioner's patient
+      summary: practitioner's patients listing
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - practitioners
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPractitionerPatientList'
+          description: ''
+  /api/practitioners/signup/:
+    post:
+      operationId: practitioners_signup_create
+      description: Use this endpoint to signup as a doctor/practitioner
+      summary: signup as a doctor/practitioner
+      tags:
+      - practitioners
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PractitionerCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PractitionerCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PractitionerCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PractitionerCreate'
+          description: ''
+components:
+  schemas:
+    Activation:
+      type: object
+      properties:
+        uid:
+          type: string
+        token:
+          type: string
+      required:
+      - token
+      - uid
+    BlankEnum:
+      enum:
+      - ''
+    Channel:
+      type: object
+      properties:
+        pk:
+          type: string
+          format: uuid
+          readOnly: true
+          title: Id
+        title:
+          type: string
+          maxLength: 130
+      required:
+      - pk
+      - title
+    ChannelDetail:
+      type: object
+      properties:
+        pk:
+          type: string
+          format: uuid
+          readOnly: true
+          title: Id
+        title:
+          type: string
+          maxLength: 130
+        useraichat:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserAIChat'
+      required:
+      - pk
+      - title
+      - useraichat
+    ChestPainTypeEnum:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      type: integer
+      description: |-
+        * `0` - Typical Angina
+        * `1` - Atypical Angina
+        * `2` - Non Angina
+        * `3` - Asymptomatic
+    CustomUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        first_name:
+          type: string
+          readOnly: true
+        last_name:
+          type: string
+          readOnly: true
+        gender:
+          oneOf:
+          - $ref: '#/components/schemas/GenderEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        profile_pic:
+          type: string
+          format: uri
+          title: Profile Picture
+        email:
+          type: string
+          format: email
+          readOnly: true
+          title: Email address
+        age:
+          type: string
+          readOnly: true
+      required:
+      - age
+      - email
+      - first_name
+      - id
+      - last_name
+    CustomUserCreate:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 50
+        last_name:
+          type: string
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        gender:
+          oneOf:
+          - $ref: '#/components/schemas/GenderEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - first_name
+      - password
+    DurationEnum:
+      enum:
+      - 1
+      - 2
+      - 3
+      type: integer
+      description: |-
+        * `1` - One
+        * `2` - Two
+        * `3` - Three
+    FastingBloodSugarEnum:
+      enum:
+      - 1
+      - 0
+      type: integer
+      description: |-
+        * `1` - Male
+        * `0` - Female
+    GenderEnum:
+      enum:
+      - male
+      - female
+      - other
+      type: string
+      description: |-
+        * `male` - Male
+        * `female` - Female
+        * `other` - Other
+    GenerateOTP:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+      - email
+      - password
+    HeartClassification:
+      type: object
+      properties:
+        age:
+          type: integer
+          description: age of the person (in years)
+        sex:
+          allOf:
+          - $ref: '#/components/schemas/FastingBloodSugarEnum'
+          description: |-
+            gender of the person (1 = male; 0 = female)
+
+            * `1` - Male
+            * `0` - Female
+        chest_pain_type:
+          $ref: '#/components/schemas/ChestPainTypeEnum'
+        resting_bp:
+          type: number
+          format: double
+          description: blood pressure while resting (in mm Hg on admission to the
+            hospital)
+        cholesterol:
+          type: number
+          format: double
+          description: A person's serum cholesterol in mg/dl
+        fasting_blood_sugar:
+          allOf:
+          - $ref: '#/components/schemas/FastingBloodSugarEnum'
+          description: |-
+            Blood sugar while fasting & [ > 120 mg/dl ] (1 = true; 0 = false)
+
+            * `1` - True
+            * `0` - False
+        restecg:
+          $ref: '#/components/schemas/SlopeEnum'
+        max_hr:
+          type: number
+          format: double
+          description: Maximum heart rate achieved
+        exang:
+          allOf:
+          - $ref: '#/components/schemas/FastingBloodSugarEnum'
+          description: |-
+            Exercise-induced angina (AP) is a common complaint of cardiac patients, particularly when exercising in the cold. It usually happens during activity (exertion) and goes away with rest or angina medication.For example, pain, when walking uphill or in cold weather, maybe angina.Stable angina pain is predictable and usually similar to previous episodesof chest pain.
+
+            * `1` - Yes
+            * `0` - No
+        oldpeak:
+          type: number
+          format: double
+          description: ST depression induced by exercise relative to restExercise-induced
+            ST segment depression is considered a reliable ECGfinding for the diagnosis
+            of obstructive coronary atherosclerosis.ST-segment depression is believed
+            as a common electrocardiographicsign of myocardial ischemia during exercise
+            testing. Ischemia is generallydefined as oxygen deprivation due to reduced
+            perfusion.ST segment depression less than 0.5 mm is accepted in all leads.
+            ST segment depression 0.5 mm or more is considered pathological.
+        slope:
+          $ref: '#/components/schemas/SlopeEnum'
+        num_major_vessels:
+          type: integer
+          maximum: 3
+          minimum: 0
+          description: no. of major vessels (0-3) colored by flourosopy
+        thalassemia:
+          allOf:
+          - $ref: '#/components/schemas/SlopeEnum'
+          description: |-
+            People with thalassemia can get too much iron in their bodies,either from the disease or from frequent blood transfusions. Too much iron can result in damage to your heart, liver,& endocrine system which includes hormone-producing glandsthat regulate processes throughout your body.
+
+            * `0` - Normal
+            * `1` - Fixed Defect
+            * `2` - Reversable Defect
+      required:
+      - age
+      - chest_pain_type
+      - cholesterol
+      - exang
+      - fasting_blood_sugar
+      - max_hr
+      - num_major_vessels
+      - oldpeak
+      - restecg
+      - resting_bp
+      - sex
+      - slope
+      - thalassemia
+    PaginatedCustomUserList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomUser'
+    PaginatedPatientAppointmentList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatientAppointment'
+    PaginatedPractitionerAppointmentList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PractitionerAppointment'
+    PaginatedPractitionerList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Practitioner'
+    PaginatedPractitionerPatientList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PractitionerPatient'
+    PaginatedUserPractitionerChatList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserPractitionerChat'
+    PasswordResetConfirmRetype:
+      type: object
+      properties:
+        uid:
+          type: string
+        token:
+          type: string
+        new_password:
+          type: string
+        re_new_password:
+          type: string
+      required:
+      - new_password
+      - re_new_password
+      - token
+      - uid
+    PatchedChannel:
+      type: object
+      properties:
+        pk:
+          type: string
+          format: uuid
+          readOnly: true
+          title: Id
+        title:
+          type: string
+          maxLength: 130
+    PatchedCustomUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        first_name:
+          type: string
+          readOnly: true
+        last_name:
+          type: string
+          readOnly: true
+        gender:
+          oneOf:
+          - $ref: '#/components/schemas/GenderEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        profile_pic:
+          type: string
+          format: uri
+          title: Profile Picture
+        email:
+          type: string
+          format: email
+          readOnly: true
+          title: Email address
+        age:
+          type: string
+          readOnly: true
+    PatchedPatientAppointment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        practitioner:
+          type: string
+          readOnly: true
+        link:
+          type: string
+          maxLength: 256
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        note:
+          type: string
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+        completed:
+          type: boolean
+          readOnly: true
+    PatientAppointment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        practitioner:
+          type: string
+          readOnly: true
+        link:
+          type: string
+          maxLength: 256
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        note:
+          type: string
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+        completed:
+          type: boolean
+          readOnly: true
+      required:
+      - completed
+      - end_date
+      - id
+      - practitioner
+      - start_date
+      - status
+    PatientCreateAppointment:
+      type: object
+      properties:
+        patient:
+          type: string
+          readOnly: true
+        practitioner:
+          type: string
+          readOnly: true
+        duration:
+          allOf:
+          - $ref: '#/components/schemas/DurationEnum'
+          writeOnly: true
+          description: |-
+            Duration in hours
+
+            * `1` - One
+            * `2` - Two
+            * `3` - Three
+        start_date:
+          type: string
+          format: date-time
+      required:
+      - duration
+      - patient
+      - practitioner
+      - start_date
+    Practitioner:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+        email:
+          type: string
+        gender:
+          type: string
+        image:
+          type: string
+        office_address:
+          type: string
+          maxLength: 256
+        city:
+          type: string
+          maxLength: 256
+        state:
+          type: string
+          maxLength: 256
+      required:
+      - email
+      - gender
+      - id
+      - image
+      - name
+    PractitionerAcceptOrDeclineAppointment:
+      type: object
+      properties:
+        practitioner:
+          type: string
+          readOnly: true
+        patient:
+          type: string
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+        accept:
+          type: boolean
+          writeOnly: true
+          description: Accept or decline appointments
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - accept
+      - created_at
+      - patient
+      - practitioner
+      - status
+    PractitionerAppointment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        patient:
+          type: string
+          readOnly: true
+        link:
+          type: string
+          maxLength: 256
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        completed:
+          type: boolean
+        accept:
+          type: boolean
+          writeOnly: true
+          description: Accept or decline appointments
+      required:
+      - accept
+      - created_at
+      - id
+      - patient
+    PractitionerChatList:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserImage'
+      required:
+      - user
+    PractitionerCreate:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 50
+        last_name:
+          type: string
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        gender:
+          oneOf:
+          - $ref: '#/components/schemas/GenderEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - first_name
+      - password
+    PractitionerOverview:
+      type: object
+      properties:
+        total_appointments:
+          type: integer
+          readOnly: true
+        total_patients:
+          type: integer
+          readOnly: true
+      required:
+      - total_appointments
+      - total_patients
+    PractitionerPatient:
+      type: object
+      properties:
+        chat_id:
+          type: string
+          format: uuid
+          readOnly: true
+        patient:
+          $ref: '#/components/schemas/UserImage'
+      required:
+      - chat_id
+      - patient
+    ResendOTP:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
+    SendEmailReset:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
+    SetPasswordRetype:
+      type: object
+      properties:
+        new_password:
+          type: string
+        re_new_password:
+          type: string
+        current_password:
+          type: string
+      required:
+      - current_password
+      - new_password
+      - re_new_password
+    SetUsername:
+      type: object
+      properties:
+        current_password:
+          type: string
+        new_email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+      required:
+      - current_password
+      - new_email
+    SlopeEnum:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      description: |-
+        * `0` - Normal
+        * `1` - Wave Abnormality
+        * `2` - Ventricular Hypertrophy
+    StatusEnum:
+      enum:
+      - pending
+      - active
+      - cancelled
+      - expired
+      type: string
+      description: |-
+        * `pending` - Pending
+        * `active` - Active
+        * `cancelled` - Cancelled
+        * `expired` - Expired
+    UserAIChat:
+      type: object
+      properties:
+        text:
+          type: string
+          maxLength: 500
+        response:
+          type: string
+          readOnly: true
+        image:
+          type: string
+          format: uri
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - response
+      - text
+      - updated_at
+    UserImage:
+      type: object
+      description: Serializer for showing chat lists it contains user name and images
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        image_url:
+          type: string
+          readOnly: true
+      required:
+      - id
+      - image_url
+      - name
+    UserPractitionerChannelChat:
+      type: object
+      properties:
+        text:
+          type: string
+        name:
+          type: string
+          readOnly: true
+        profile_picture:
+          type: string
+          readOnly: true
+        sender:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - name
+      - profile_picture
+      - sender
+      - text
+    UserPractitionerChannelDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        chats:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserPractitionerChannelChat'
+      required:
+      - chats
+      - id
+    UserPractitionerChat:
+      type: object
+      description: Users/Patients chats list
+      properties:
+        chat_id:
+          type: string
+          format: uuid
+          readOnly: true
+        practitioner:
+          $ref: '#/components/schemas/PractitionerChatList'
+      required:
+      - chat_id
+      - practitioner
+    UserPractitionerCreateChat:
+      type: object
+      properties:
+        text:
+          type: string
+        sender:
+          type: boolean
+          readOnly: true
+        profile_picture:
+          type: string
+          readOnly: true
+      required:
+      - profile_picture
+      - sender
+      - text
+    UsernameResetConfirm:
+      type: object
+      properties:
+        new_email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+      required:
+      - new_email
+    VerifyOTP:
+      type: object
+      properties:
+        otp:
+          type: string
+          maxLength: 4
+      required:
+      - otp
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

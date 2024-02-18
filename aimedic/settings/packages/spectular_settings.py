@@ -13,6 +13,9 @@ SPECTACULAR_SETTINGS = {
         "FastingBloodSugarEnum": SerializerFastingBloodSugarChoices.choices,
         "SlopeEnum": SerializerSlopeChoices.choices,
     },
-    # "SWAGGER_UI_DIST": "SIDECAR",
-    # "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    # 'COMPONENT_SPLIT_REQUEST': True,
+    'SWAGGER_UI_SETTINGS': {
+        "deepLinking": True,
+        # "docExpansion": "none",
+    },
 }

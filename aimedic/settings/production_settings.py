@@ -5,6 +5,7 @@ from aimedic.settings.packages.cloudinary_settings import *
 
 from .base_settings import *
 
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = get_env_variable("SECRET_KEY", "XXXX")
 
@@ -57,3 +58,7 @@ CACHES = {
         },
     }
 }
+
+REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = [
+    'rest_framework.renderers.JSONRenderer',
+]

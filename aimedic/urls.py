@@ -9,7 +9,7 @@ from home.views import run_cronjob
 
 urlpatterns = [
     path(
-        "api/patient/",
+        "api/patients/",
         PatientPractitionerListAPIView.as_view(),
         name="patients-practitioner",
     ),
