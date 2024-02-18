@@ -88,7 +88,12 @@ class UserPractitionerChannelAdmin(admin.ModelAdmin):
 
 @admin.register(UserPractitionerChannelChat)
 class UserPractitionerChannelChatAdmin(admin.ModelAdmin):
-    list_display = ["practitioner", "patient", "created_at"]
+    list_display = [
+        "id",
+        "practitioner",
+        "patient",
+        "created_at",
+    ]
     date_hierarchy = "created_at"
     search_fields = [
         "patient__email",
@@ -100,3 +105,4 @@ class UserPractitionerChannelChatAdmin(admin.ModelAdmin):
     ]
     list_select_related = ["practitioner", "patient", "channel"]
     raw_id_fields = ["practitioner", "patient", "channel"]
+

@@ -2402,3 +2402,6 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+tags:
+- name: appointments
+  description: Doctors and patients appointments

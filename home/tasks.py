@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from aimedic.settings.local.email_settings import DEFAULT_FROM_EMAIL
 
 
-def send_user_otp_task(user, subject, message):
+def send_user_otp_task(user, subject, message, otp):
     # BaseEmailMessage(
     #     context={"otp": otp},
     #     template_name='email/generate_otp.html').send(to=[user.email])
