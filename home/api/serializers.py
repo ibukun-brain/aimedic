@@ -114,11 +114,11 @@ class ResendOTPSerializer(BaseOTPSerializer):
         thread_send_email = threading.Thread(
             target=send_email_task, args=[subject, message, email, otp], daemon=True
         )
-        thread_send_otp = threading.Thread(
-            target=send_user_otp_task, args=[subject, message, email, otp], daemon=True
-        )
+        # thread_send_otp = threading.Thread(
+        # target=send_user_otp_task, args=[subject, message, email, otp], daemon=True
+        # )
         thread_send_email.start()
-        thread_send_otp.start()
+        # thread_send_otp.start()
         # async_task(send_email_task, subject, message, email)
         # send_user_otp_task(subject, message, email)
         data = {
