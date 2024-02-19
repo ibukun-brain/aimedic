@@ -132,8 +132,8 @@ class ResendOTPAPIView(AllowAnyPermissionMixins, generics.GenericAPIView):
     def post(self, request, format=None):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=200)
+        response = serializer.save()
+        return Response(response, status=200)
 
 
 class PatientPractitionerListAPIView(generics.ListAPIView):
