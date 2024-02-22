@@ -193,7 +193,7 @@ class CustomUserSerializer(UserSerializer):
             "id",
             "first_name",
             "last_name",
-            # "type",
+            "type",
             "gender",
             "profile_pic",
             "email",

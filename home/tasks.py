@@ -1,7 +1,7 @@
 from django.core.mail import send_mail
 
 # from templated_mail.mail import BaseEmailMessage
-from aimedic.settings.local.email_settings import DEFAULT_FROM_EMAIL
+from django.conf import settings
 
 
 def send_user_otp_task(user, subject, message, otp):
@@ -12,7 +12,7 @@ def send_user_otp_task(user, subject, message, otp):
     user.email_user(
         subject=subject,
         message=message,
-        from_email=DEFAULT_FROM_EMAIL,
+        from_email=settings.DEFAULT_FROM_EMAIL,
     )
 
 
@@ -21,5 +21,5 @@ def send_email_task(subject, message, email, otp=None):
         subject=subject,
         message=message,
         recipient_list=[email],
-        from_email=DEFAULT_FROM_EMAIL,
+        from_email=settings.DEFAULT_FROM_EMAIL,
     )
