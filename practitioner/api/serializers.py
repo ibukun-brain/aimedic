@@ -18,7 +18,6 @@ class PractitionerCreateSerializer(UserCreateSerializer):
         fields = [
             "first_name",
             "last_name",
-            "type",
             # "date_of_birth",
             "email",
             "gender",
@@ -36,6 +35,7 @@ class PractitionerSerializer(serializers.ModelSerializer):
     image = serializers.CharField(source="user.profile_pic")
     gender = serializers.CharField(source="user.gender")
     email = serializers.CharField(source="user.email")
+    type = serializers.CharField(source="user.type")
 
     class Meta:
         model = Practitioner
@@ -44,6 +44,7 @@ class PractitionerSerializer(serializers.ModelSerializer):
             "name",
             "email",
             "gender",
+            "type",
             "image",
             "office_address",
             "city",

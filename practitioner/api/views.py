@@ -1,5 +1,5 @@
-from drf_spectacular.utils import extend_schema
-from rest_framework import generics, permissions, serializers
+from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
+from rest_framework import generics, permissions, serializers, status
 
 from home.api import custom_permissions
 from practitioner.api.serializers import (
@@ -17,9 +17,6 @@ class PractitionerSignupCreateAPIView(generics.CreateAPIView):
 
     @extend_schema(
         summary="signup as a doctor/practitioner",
-        parameters=[
-            # PractitionerCreateSerializer,
-        ],
     )
     def post(self, request, *args, **kwargs):
         """Use this endpoint to signup as a doctor/practitioner"""
@@ -71,7 +68,34 @@ class PractitionerPatientsListAPIView(generics.ListAPIView):
     serializer_class = PractitionerPatientSerializer
     queryset = PractitionerPatient.objects.all()
 
-    @extend_schema(summary="practitioner's patients listing")
+    @extend_schema(
+        summary="practitioner's patients listing",
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(
+                response={
+                    "first_name": "string",
+                    "last_name": "string",
+                    "type": "practitioner",
+                    "email": "user@example.com",
+                    "gender": "male",
+                    "password": "string"
+                }
+            )
+        },
+        examples=[
+            OpenApiExample(
+                name="OK",
+                value={
+                    "first_name": "string",
+                    "last_name": "string",
+                    "type": "practitioner",
+                    "email": "user@example.com",
+                    "gender": "male",
+                    "password": "string"
+                }
+            )
+        ]
+    )
     def get(self, request, *args, **kwargs):
         """
         The endpoint returns the practitioner's patient"""
