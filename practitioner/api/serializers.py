@@ -18,7 +18,7 @@ class PractitionerCreateSerializer(UserCreateSerializer):
         fields = [
             "first_name",
             "last_name",
-            # "type",
+            "type",
             # "date_of_birth",
             "email",
             "gender",

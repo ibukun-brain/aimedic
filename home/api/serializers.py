@@ -115,7 +115,7 @@ class ResendOTPSerializer(BaseOTPSerializer):
             target=send_email_task, args=[subject, message, email, otp], daemon=True
         )
         # thread_send_otp = threading.Thread(
-        # target=send_user_otp_task, args=[subject, message, email, otp], daemon=True
+        #     target=send_user_otp_task, args=[subject, message, email, otp], daemon=True
         # )
         thread_send_email.start()
         # thread_send_otp.start()
@@ -193,7 +193,7 @@ class CustomUserSerializer(UserSerializer):
             "id",
             "first_name",
             "last_name",
-            # "type",
+            "type",
             "gender",
             "profile_pic",
             "email",
