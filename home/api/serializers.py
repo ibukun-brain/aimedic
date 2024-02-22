@@ -1,3 +1,4 @@
+import email
 import threading
 
 import pyotp
@@ -67,11 +68,12 @@ class GenerateOTPSerializer(BaseOTPSerializer):
         otp = self.generate_otp(interval=validated_data.get("interval")).now()
         subject = "OTP Verification"
         message = f"Hi there, your otp is {otp}\nexpires in 10 minutes"
+        send_user_otp_task(user, subject, message, otp)
         # st_task(send_user_otp_task, user, subject, message)
-        thread = threading.Thread(
-            target=send_user_otp_task, args=[user, subject, message, otp], daemon=True
-        )
-        thread.start()
+        # thread = threading.Thread(
+        #     target=send_user_otp_task, args=[user, subject, message, otp], daemon=True
+        # )
+        # thread.start()
         # i don't know if django_q will run on vercel but i will assume,
         # if it doesn't workreplace where u used django_q and proceed with
         # django_crontab
@@ -111,13 +113,14 @@ class ResendOTPSerializer(BaseOTPSerializer):
         otp = self.generate_otp(interval=600).now()
         subject = "OTP Verification"
         message = f"Hi there, your otp is {otp}\nexpires in 10 minutes"
-        thread_send_email = threading.Thread(
-            target=send_email_task, args=[subject, message, email, otp], daemon=True
-        )
+        send_email_task(subject, message, email, otp)
+        # thread_send_email = threading.Thread(
+        #     target=send_email_task, args=[subject, message, email, otp], daemon=True
+        # )
         # thread_send_otp = threading.Thread(
         #     target=send_user_otp_task, args=[subject, message, email, otp], daemon=True
         # )
-        thread_send_email.start()
+        # thread_send_email.start()
         # thread_send_otp.start()
         # async_task(send_email_task, subject, message, email)
         # send_user_otp_task(subject, message, email)
