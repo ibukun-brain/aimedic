@@ -12,11 +12,12 @@ from rest_framework import generics, status
 
 from aimedic.utils.settings import get_env_variable
 from chats.api.serializers import (
+    UserAIChatSerializer,
     UserPractitionerChannelDetailSerializer,
     UserPractitionerChatSerializer,
     UserPractitionerCreateChatSerializer,
 )
-from chats.models import UserPractitionerChannel  # Channel, UserAIChat,
+from chats.models import UserAIChat, UserPractitionerChannel
 
 # from chats.tasks import summarize_channel_title_task
 # from home.api import custom_permissions
@@ -117,29 +118,33 @@ pusher_client = pusher.Pusher(
 #         serializer.save(user=self.request.user)
 
 
-# class UserAIChatCreateAPIView(generics.CreateAPIView):
-#     pusher_event_name = "user_chat"
-#     serializer_class = UserAIChatSerializer
-#     queryset = UserAIChat.objects.select_related("user").all()
+class UserAIChatCreateAPIView(generics.CreateAPIView):
+    pusher_event_name = "user_chat"
+    serializer_class = UserAIChatSerializer
+    queryset = UserAIChat.objects.select_related("user").all()
 
-#     def post(self, request, *args, **kwargs):
-#         return self.create(request, *args, **kwargs)
 
-#     def perform_create(self, serializer):
-#         text = serializer.validated_data.get("text")
-#         # ai_chat_id = serializer.validated_data.get("id")
-#         channel = Channel.objects.create(title=text, user=self.request.user)
-#         # async_task(summarize_channel_title_task, channel.id, channel.title)
-#         # async_task(chat_ai_task, text, ai_chat_id)
-#         thread = threading.Thread(
-#             target=summarize_channel_title_task,
-#             args=[channel.id, channel.title],
-#             daemon=True,
-#         )
-#         thread.start()
-#         # chat_ai_task(text, ai_chat_id)
-#         # call celery or threading to save ai response
-#         serializer.save(user=self.request.user, channel=channel)
+    @extend_schema(
+        summary="AI chatbot"
+    )
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    # def perform_create(self, serializer):
+        # text = serializer.validated_data.get("text")
+        # ai_chat_id = serializer.validated_data.get("id")
+        # channel = Channel.objects.create(title=text, user=self.request.user)
+        # async_task(summarize_channel_title_task, channel.id, channel.title)
+        # async_task(chat_ai_task, text, ai_chat_id)
+        # thread = threading.Thread(
+        #     target=summarize_channel_title_task,
+        #     args=[channel.id, channel.title],
+        #     daemon=True,
+        # )
+        # thread.start()
+        # chat_ai_task(text, ai_chat_id)
+        # call celery or threading to save ai response
+        # serializer.save(user=self.request.user, channel=channel)
 
 
 class UserPractitionerChatListAPIView(generics.ListAPIView):
