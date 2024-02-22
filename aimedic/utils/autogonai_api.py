@@ -4,6 +4,8 @@ import requests
 
 from aimedic.utils.env_variable import get_env_variable
 
+AUTOGON_CHATBOT_AGENT_ID = get_env_variable("AUTOGON_CHATBOT_AGENT_ID")
+
 
 class AutoGonAI:
     def __init__(self, api_key=None):
@@ -29,4 +31,31 @@ class AutoGonAI:
             raise e
 
         resp = json.loads(r.text)
+        return resp
+
+    def chatbot_agent(self, question):
+        """
+        This API allows seamless communication between a client application
+        and a custom chatbot service agent, facilitating natural language
+        processing and response generation.
+        """
+        url = self.url + f"/services/chatbot/{AUTOGON_CHATBOT_AGENT_ID}/chat/"
+        print(url)
+        headers = {
+            "Content-Type": "application/json",
+        }
+        payload = {
+            "question": question,
+            # "session_id": session_id,
+        }
+
+        try:
+            r = requests.post(
+                url, data=json.dumps(payload), headers=headers, timeout=60
+            )
+        except Exception as e:
+            raise e
+
+        resp = json.loads(r.text)
+        print(resp)
         return resp

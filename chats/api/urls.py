@@ -18,11 +18,11 @@ urlpatterns = [
     #     views.ChannelRenameAPIView.as_view(),
     #     name="channels-chatbot-rename",
     # ),
-    # path(
-    #     "channels/chatbot/",
-    #     views.UserAIChatCreateAPIView.as_view(),
-    #     name="channels-chatbot-chat",
-    # ),
+    path(
+        "channels/chatbot/",
+        views.UserAIChatCreateAPIView.as_view(),
+        name="channels-chatbot-chat",
+    ),
     path(
         "channels/chats/",
         views.UserPractitionerChatListAPIView.as_view(),

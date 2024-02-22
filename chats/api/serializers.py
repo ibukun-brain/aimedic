@@ -2,6 +2,7 @@ from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
+from aimedic.utils.autogonai_api import AutoGonAI
 from chats.models import (  # PractitionerChannelChat,; UserChannelChat,
     Channel,
     UserAIChat,
@@ -10,6 +11,8 @@ from chats.models import (  # PractitionerChannelChat,; UserChannelChat,
 )
 from home.models import CustomUser
 from practitioner.models import Practitioner, PractitionerPatient
+
+autogon_ai = AutoGonAI()
 
 
 class ChannelSerializer(serializers.ModelSerializer):
@@ -32,9 +35,9 @@ class UserAIChatSerializer(serializers.ModelSerializer):
         fields = [
             "text",
             "response",
-            "image",
+            # "image",
             "created_at",
-            "updated_at",
+            # "updated_at",
         ]
         extra_kwargs = {
             "response": {
@@ -43,7 +46,15 @@ class UserAIChatSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        return UserAIChat.objects.create(**validated_data)
+        text = validated_data.get("text")
+        # print(text)
+        chatbot_agent_resp = autogon_ai.chatbot_agent(question=text)
+        # print(chatbot_agent_resp)
+        return {
+            "text": text,
+            "response": chatbot_agent_resp.get("data")["bot_response"],
+        }
+        # return UserAIChat.objects.create(**validated_data)
 
 
 class ChannelDetailSerializer(serializers.ModelSerializer):
