@@ -75,31 +75,6 @@ class PractitionerPatientsListAPIView(generics.ListAPIView):
 
     @extend_schema(
         summary="practitioner's patients listing",
-        responses={
-            status.HTTP_200_OK: OpenApiResponse(
-                response={
-                    "first_name": "string",
-                    "last_name": "string",
-                    "type": "practitioner",
-                    "email": "user@example.com",
-                    "gender": "male",
-                    "password": "string"
-                }
-            )
-        },
-        examples=[
-            OpenApiExample(
-                name="OK",
-                value={
-                    "first_name": "string",
-                    "last_name": "string",
-                    "type": "practitioner",
-                    "email": "user@example.com",
-                    "gender": "male",
-                    "password": "string"
-                }
-            )
-        ]
     )
     def get(self, request, *args, **kwargs):
         """
