@@ -1,4 +1,9 @@
-from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
+from drf_spectacular.utils import (
+    OpenApiExample,
+    OpenApiRequest,
+    OpenApiResponse,
+    extend_schema,
+)
 from rest_framework import generics, permissions, serializers, status
 
 from home.api import custom_permissions

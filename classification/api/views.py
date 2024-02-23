@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
@@ -14,6 +14,29 @@ class HeartClassificationAPIView(generics.GenericAPIView):
         parameters=[
             HeartClassificationSerializer,
         ],
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(
+                response={
+                    "result": "probably have high risk of heart disease"
+                },
+                description="AI result",
+                examples=[
+                    OpenApiExample(
+                        "High risk",
+                        value={
+                            "result": "probably have high risk of heart disease"
+                        },
+                    ),
+                    OpenApiExample(
+                        "Low risk",
+                        value={
+                            "result":
+                            "probably does not have high risk of heart disease"
+                        },
+                    )
+                ]
+            )
+        }
     )
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
