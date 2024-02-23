@@ -52,7 +52,7 @@ SPECTACULAR_SETTINGS = {
         },
         {
             "name": "practitioners",
-            "description": "Practtioners information"
+            "description": "Practitioners information"
         }
     ]
 }

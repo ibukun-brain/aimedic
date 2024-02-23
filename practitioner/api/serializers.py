@@ -5,8 +5,8 @@ from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
+from aimedic.utils.choices import Profile
 from chats.api.serializers import UserImageSerializer
-from home.models import CustomUser
 from practitioner.models import Practitioner, PractitionerPatient
 
 User = get_user_model()
@@ -18,17 +18,25 @@ class PractitionerCreateSerializer(UserCreateSerializer):
         fields = [
             "first_name",
             "last_name",
+            "type",
             # "date_of_birth",
             "email",
             "gender",
             "password",
         ]
+        extra_kwargs = {
+            "type": {
+                "read_only": True,
+            }
+        }
 
     def create(self, validated_data):
         try:
             user = self.perform_create(validated_data)
         except IntegrityError:
             self.fail("cannot_create_user")
+        user.type = Profile.Practitioner
+        user.save()
         _practitioner, _ = Practitioner.objects.get_or_create(user=user)
         return user
 
