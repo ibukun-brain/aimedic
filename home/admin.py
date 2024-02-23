@@ -70,7 +70,7 @@ class UserAdmin(DefaultUserAdmin):
         "date_joined",
         "last_login",
         "is_superuser",
-        "is_staff",
+        "is_active",
     ]
     ordering = (
         "first_name",

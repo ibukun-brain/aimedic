@@ -123,7 +123,6 @@ class UserAIChatCreateAPIView(generics.CreateAPIView):
     serializer_class = UserAIChatSerializer
     queryset = UserAIChat.objects.select_related("user").all()
 
-
     @extend_schema(
         summary="AI chatbot"
     )

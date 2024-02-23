@@ -17,14 +17,13 @@ DJOSER = {
         "user_create": "home.api.serializers.CustomUserCreateSerializer",
         "user": "home.api.serializers.CustomUserSerializer",
         "current_user": "home.api.serializers.CustomUserSerializer",
-        "token_create": "djoser.serializers.TokenCreateSerializer",
     },
-    "SOCIAL_AUTH_TOKEN_STRATEGY": "djoser.social.token.jwt.TokenStrategy",
-    "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": [
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:3000/home",
-        "http://127.0.0.1:3000/login",
-        "http://localhost:8000/accounts/profile/",
-        "http://127.0.0.1:8000/accounts/profile/",
-    ],
+    # "SOCIAL_AUTH_TOKEN_STRATEGY": "djoser.social.token.jwt.TokenStrategy",
+    # "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": [
+    #     "http://127.0.0.1:3000",
+    #     "http://127.0.0.1:3000/home",
+    #     "http://127.0.0.1:3000/login",
+    #     "http://localhost:8000/accounts/profile/",
+    #     "http://127.0.0.1:8000/accounts/profile/",
+    # ],
 }

@@ -28,7 +28,7 @@ urlpatterns = [
     path(
         "api/practitioners/", include("practitioner.api.urls", namespace="practitioner")
     ),
-    path("api/auth/", include("home.api.urls", namespace="home")),
+    # path("api/auth/", include("home.api.urls", namespace="home")),
     path("api/auth/", include("djoser.urls")),
     path("api/auth/", include("djoser.urls.jwt")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),

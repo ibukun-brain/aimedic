@@ -25,7 +25,10 @@ class PractitionerCreateSerializer(UserCreateSerializer):
         ]
 
     def create(self, validated_data):
-        user = CustomUser.objects.create(**validated_data, type="practitioner")
+        try:
+            user = self.perform_create(validated_data)
+        except IntegrityError:
+            self.fail("cannot_create_user")
         _practitioner, _ = Practitioner.objects.get_or_create(user=user)
         return user
 
