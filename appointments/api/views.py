@@ -202,7 +202,7 @@ class PractitionerAppointmentCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(
-            appointment_id=self.get_object(),
+            appointment_id=self.kwargs["appointment_id"],
             practitioner=self.request.user.practitioner,
             patient=self.get_object().patient,
         )
