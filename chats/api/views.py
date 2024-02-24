@@ -123,27 +123,25 @@ class UserAIChatCreateAPIView(generics.CreateAPIView):
     serializer_class = UserAIChatSerializer
     queryset = UserAIChat.objects.select_related("user").all()
 
-    @extend_schema(
-        summary="AI chatbot"
-    )
+    @extend_schema(summary="AI chatbot")
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
     # def perform_create(self, serializer):
-        # text = serializer.validated_data.get("text")
-        # ai_chat_id = serializer.validated_data.get("id")
-        # channel = Channel.objects.create(title=text, user=self.request.user)
-        # async_task(summarize_channel_title_task, channel.id, channel.title)
-        # async_task(chat_ai_task, text, ai_chat_id)
-        # thread = threading.Thread(
-        #     target=summarize_channel_title_task,
-        #     args=[channel.id, channel.title],
-        #     daemon=True,
-        # )
-        # thread.start()
-        # chat_ai_task(text, ai_chat_id)
-        # call celery or threading to save ai response
-        # serializer.save(user=self.request.user, channel=channel)
+    # text = serializer.validated_data.get("text")
+    # ai_chat_id = serializer.validated_data.get("id")
+    # channel = Channel.objects.create(title=text, user=self.request.user)
+    # async_task(summarize_channel_title_task, channel.id, channel.title)
+    # async_task(chat_ai_task, text, ai_chat_id)
+    # thread = threading.Thread(
+    #     target=summarize_channel_title_task,
+    #     args=[channel.id, channel.title],
+    #     daemon=True,
+    # )
+    # thread.start()
+    # chat_ai_task(text, ai_chat_id)
+    # call celery or threading to save ai response
+    # serializer.save(user=self.request.user, channel=channel)
 
 
 class UserPractitionerChatListAPIView(generics.ListAPIView):
@@ -159,8 +157,8 @@ class UserPractitionerChatListAPIView(generics.ListAPIView):
                     "patient": {
                         "id": "cdc9035d-155b-463e-be13-e9de29eef57f",
                         "name": "john doe",
-                        "image_url": "/media/images/customuser/2103632.jpg"
-                    }
+                        "image_url": "/media/images/customuser/2103632.jpg",
+                    },
                 },
                 examples=[
                     OpenApiExample(
@@ -170,8 +168,8 @@ class UserPractitionerChatListAPIView(generics.ListAPIView):
                             "patient": {
                                 "id": "cdc9035d-155b-463e-be13-e9de29eef57f",
                                 "name": "john doe",
-                                "image_url": "/media/images/customuser/2103632.jpg"
-                            }
+                                "image_url": "/media/images/customuser/2103632.jpg",
+                            },
                         },
                     ),
                     OpenApiExample(
@@ -181,27 +179,25 @@ class UserPractitionerChatListAPIView(generics.ListAPIView):
                             "practitioner": {
                                 "id": "684b7eea-940a-447e-ab0a-487ced11f764",
                                 "name": "Stone Strange",
-                                "image_url": "/media/images/customuser/20.jpg"
-                            }
-                        }
-                    )
-                ]
+                                "image_url": "/media/images/customuser/20.jpg",
+                            },
+                        },
+                    ),
+                ],
             )
-        }
+        },
     )
     def get(self, request, *args, **kwargs):
         """
         This endpoint returns a patient or doctor chat/message list,
-        the response varies depending on the if the user logged in is a patient 
+        the response varies depending on the if the user logged in is a patient
         or a doctor.
         """
         return self.list(request, *args, **kwargs)
 
     def get_queryset(self):
         qs = PractitionerPatient.objects.select_related(
-            "userpractitionerchannel__chat",
-            "patient",
-            "practitioner"
+            "userpractitionerchannel__chat", "patient", "practitioner"
         ).prefetch_related("userpractitionerchannel")
         request = self.request
         if request.user.is_practitioner:
@@ -241,16 +237,16 @@ class UserPractitionerChannelDetailAPIView(generics.RetrieveAPIView):
                             "name": "Ryomen Sukuna",
                             "profile_picture": "/media/images/customuser/20.jpg",
                             "sender": True,
-                            "created_at": "2024-02-05T18:01:18.891162+01:00"
+                            "created_at": "2024-02-05T18:01:18.891162+01:00",
                         },
                         {
                             "text": "am good, you?",
                             "name": "john doe",
                             "profile_picture": "/media/images/customuser/20.jpg",
                             "sender": False,
-                            "created_at": "2024-02-05T18:05:29.732242+01:00"
+                            "created_at": "2024-02-05T18:05:29.732242+01:00",
                         },
-                    ]
+                    ],
                 },
                 examples=[
                     OpenApiExample(
@@ -263,19 +259,19 @@ class UserPractitionerChannelDetailAPIView(generics.RetrieveAPIView):
                                     "name": "Ryomen Sukuna",
                                     "profile_picture": "/media/images/customuser/2.jpg",
                                     "sender": True,
-                                    "created_at": "2024-02-05T18:01:18.891162+01:00"
+                                    "created_at": "2024-02-05T18:01:18.891162+01:00",
                                 },
                                 {
                                     "text": "am good, you?",
                                     "name": "Yuji itadori",
                                     "profile_picture": "/media/images/customuser/2.jpg",
                                     "sender": False,
-                                    "created_at": "2024-02-05T18:05:29.732242+01:00"
+                                    "created_at": "2024-02-05T18:05:29.732242+01:00",
                                 },
-                            ]
+                            ],
                         },
                     )
-                ]
+                ],
             )
         },
     )
@@ -309,7 +305,7 @@ class UserPractitionerChannelChatCreateAPIView(generics.CreateAPIView):
                 response={
                     "text": "whats up Yuji itadori",
                     "sender": True,
-                    "profile_picture": "/media/images/customuser/image.jpg"
+                    "profile_picture": "/media/images/customuser/image.jpg",
                 },
                 examples=[
                     OpenApiExample(
@@ -317,10 +313,10 @@ class UserPractitionerChannelChatCreateAPIView(generics.CreateAPIView):
                         value={
                             "text": "whats up Yuji itadori",
                             "sender": True,
-                            "profile_picture": "/media/images/customuser/image.jpg"
-                        }
+                            "profile_picture": "/media/images/customuser/image.jpg",
+                        },
                     )
-                ]
+                ],
             )
         },
     )

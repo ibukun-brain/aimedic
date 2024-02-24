@@ -4,7 +4,7 @@ import requests
 
 from aimedic.utils.env_variable import get_env_variable
 
-AUTOGON_CHATBOT_AGENT_ID = get_env_variable("AUTOGON_CHATBOT_AGENT_ID")
+AUTOGONAI_CHATBOT_AGENT_ID = get_env_variable("AUTOGONAI_CHATBOT_AGENT_ID")
 
 
 class AutoGonAI:
@@ -39,8 +39,7 @@ class AutoGonAI:
         and a custom chatbot service agent, facilitating natural language
         processing and response generation.
         """
-        url = self.url + f"/services/chatbot/{AUTOGON_CHATBOT_AGENT_ID}/chat/"
-        print(url)
+        url = self.url + f"/services/chatbot/{AUTOGONAI_CHATBOT_AGENT_ID}/chat/"
         headers = {
             "Content-Type": "application/json",
         }
@@ -57,5 +56,4 @@ class AutoGonAI:
             raise e
 
         resp = json.loads(r.text)
-        print(resp)
         return resp

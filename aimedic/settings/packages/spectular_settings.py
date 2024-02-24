@@ -13,14 +13,14 @@ SPECTACULAR_SETTINGS = {
         "FastingBloodSugarEnum": SerializerFastingBloodSugarChoices.choices,
         "SlopeEnum": SerializerSlopeChoices.choices,
     },
-    'COMPONENT_SPLIT_REQUEST': True,
-    'SWAGGER_UI_SETTINGS': {
+    "COMPONENT_SPLIT_REQUEST": True,
+    "SWAGGER_UI_SETTINGS": {
         "deepLinking": True,
         "docExpansion": "none",
         "persistAuthorization": True,
         # "displayOperationId": True,
     },
-    'CONTACT': {
+    "CONTACT": {
         "name": "Afrimed API",
         # "url": "https://foo.com",
         "email": "ibukunolaifa@gmail.com",
@@ -32,7 +32,7 @@ SPECTACULAR_SETTINGS = {
         },
         {
             "name": "auth",
-            "description": "Patient authentication, this endpoint is available to the doctors as well"
+            "description": "Patient authentication, this endpoint is available to the doctors as well",
         },
         {
             "name": "chats",
@@ -42,17 +42,12 @@ SPECTACULAR_SETTINGS = {
             "name": "classification",
             "description": "AutogonAI health disease classification",
         },
-        {
-            "name": "notifications",
-            "description": "Patients and Doctors notifications"
-        },
+        {"name": "notifications", "description": "Patients and Doctors notifications"},
         {
             "name": "patient",
-            "description": "Patient information, contains only patient's doctor endpoint only"
+            "description": "Patient information, contains only patient's doctor endpoint only",
         },
-        {
-            "name": "practitioners",
-            "description": "Practitioners information"
-        }
-    ]
+        {"name": "practitioners", "description": "Practitioners information"},
+        {"name": "detection", "description": "Image or object detection"},
+    ],
 }

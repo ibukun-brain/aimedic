@@ -105,4 +105,3 @@ class UserPractitionerChannelChatAdmin(admin.ModelAdmin):
     ]
     list_select_related = ["practitioner", "patient", "channel"]
     raw_id_fields = ["practitioner", "patient", "channel"]
-

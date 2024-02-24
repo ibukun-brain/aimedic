@@ -1,7 +1,9 @@
 from aimedic.utils.env_variable import get_env_variable
 
 # Sending email configuration
-EMAIL_HOST_USER = "ibukunolaifa1984@gmail.com" or get_env_variable("EMAIL_HOST_USER", "XXX")
+EMAIL_HOST_USER = "ibukunolaifa1984@gmail.com" or get_env_variable(
+    "EMAIL_HOST_USER", "XXX"
+)
 # EMAIL_HOST_USER = get_env_variable("EMAIL_HOST_USER", "XXX")
 EMAIL_HOST_PASSWORD = get_env_variable("EMAIL_HOST_PASSWORD", "XXX")
 # EMAIL_HOST_PASSWORD = (
