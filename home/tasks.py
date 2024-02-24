@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+sg = SendGridAPIClient(os.environ.get("SENDGRID_API_KEY"))
 
 
 def send_user_otp_task(user, subject, message, otp):
@@ -23,7 +23,7 @@ def send_user_otp_task(user, subject, message, otp):
         from_email=settings.DEFAULT_FROM_EMAIL,
         to_emails=user.email,
         subject=subject,
-        html_content=message
+        html_content=message,
     )
     try:
         sg.send(message)
@@ -42,7 +42,7 @@ def send_email_task(subject, message, email, otp=None):
         from_email=settings.DEFAULT_FROM_EMAIL,
         to_emails=email,
         subject=subject,
-        html_content=message
+        html_content=message,
     )
     try:
         sg.send(message)

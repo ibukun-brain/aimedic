@@ -10,4 +10,9 @@ urlpatterns = [
         views.HeartClassificationAPIView.as_view(),
         name="heart-classification",
     ),
+    path(
+        "image_detection/",
+        views.ImageDetectionAPIView.as_view(),
+        name="image-detection",
+    ),
 ]

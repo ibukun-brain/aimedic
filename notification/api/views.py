@@ -34,8 +34,8 @@ class AllNotificationListAPIView(generics.ListAPIView):
                     },
                     "unread": True,
                     "verb": "You have an appointment request",
-                    "description": "Ayanokoji Kenjaku sent an appointment" +
-                    "request, accept or decline.",
+                    "description": "Ayanokoji Kenjaku sent an appointment"
+                    + "request, accept or decline.",
                 },
                 examples=[
                     OpenApiExample(
@@ -50,10 +50,9 @@ class AllNotificationListAPIView(generics.ListAPIView):
                                 "image_url": "string",
                             },
                             "unread": True,
-                            "verb":
-                            "You have an appointment request",
-                            "description": "Ayanokoji Kenjaku sent an appointment" +
-                            "request, accept or decline.",
+                            "verb": "You have an appointment request",
+                            "description": "Ayanokoji Kenjaku sent an appointment"
+                            + "request, accept or decline.",
                         },
                     ),
                     OpenApiExample(
@@ -68,10 +67,9 @@ class AllNotificationListAPIView(generics.ListAPIView):
                                 "image_url": "string",
                             },
                             "unread": False,
-                            "verb":
-                            "You have an appointment request",
-                            "description": "Ayanokoji Kenjaku sent an appointment" +
-                            "request, accept or decline.",
+                            "verb": "You have an appointment request",
+                            "description": "Ayanokoji Kenjaku sent an appointment"
+                            + "request, accept or decline.",
                         },
                     ),
                 ],
@@ -114,8 +112,7 @@ class ReadNotificationDetailAPIView(generics.RetrieveAPIView):
                     },
                     "unread": False,
                     "verb": "You have an appointment request",
-                    "description":
-                    "Ayanokoji Kenjaku sent an appointment request, accept or decline.",
+                    "description": "Ayanokoji Kenjaku sent an appointment request, accept or decline.",
                 },
                 examples=[
                     OpenApiExample(
@@ -131,8 +128,8 @@ class ReadNotificationDetailAPIView(generics.RetrieveAPIView):
                             },
                             "unread": False,
                             "verb": "You have an appointment request",
-                            "description": "Ayanokoji Kenjaku sent an " +
-                            "appointment request, accept or decline.",
+                            "description": "Ayanokoji Kenjaku sent an "
+                            + "appointment request, accept or decline.",
                         },
                     )
                 ],

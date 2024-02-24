@@ -87,9 +87,11 @@ class UserPractitionerChannel(TimeBasedModel):
     @property
     def practitioner_recent_message(self):
         try:
-            message = self.chats.filter(
-                practitioner=self.chat.practitioner
-            ).latest("created_at").text
+            message = (
+                self.chats.filter(practitioner=self.chat.practitioner)
+                .latest("created_at")
+                .text
+            )
         except UserPractitionerChannelChat.DoesNotExist:
             message = None
         return message
@@ -98,9 +100,9 @@ class UserPractitionerChannel(TimeBasedModel):
     @property
     def patient_recent_message(self):
         try:
-            message = self.chats.filter(
-                patient=self.chat.patient
-            ).latest("created_at").text
+            message = (
+                self.chats.filter(patient=self.chat.patient).latest("created_at").text
+            )
         except UserPractitionerChannelChat.DoesNotExist:
             message = None
         return message

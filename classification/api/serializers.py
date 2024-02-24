@@ -1,4 +1,5 @@
 # import threading
+import requests
 from rest_framework import serializers
 
 # from django_q.tasks import async_task, result
@@ -11,6 +12,8 @@ from aimedic.utils.choices import (
     SerializerSlopeChoices,
     SerializerThalassemiaChoices,
 )
+from aimedic.utils.env_variable import get_env_variable
+from classification.utils.image_detection import get_img_prediction
 from classification.utils.heart_disease import HeartDisease
 
 
@@ -100,4 +103,28 @@ class HeartClassificationSerializer(serializers.Serializer):
         result = output_map.get(prediction)
         return {
             "result": result,
+        }
+
+
+class ImageObjectDetentionSerializer(serializers.Serializer):
+    image = serializers.ImageField(write_only=True)
+    # result = serializers.ReadOnlyField()
+
+    def create(self, validated_data):
+        image = validated_data.get("image")
+        api_key = get_env_variable("AUTOGONAI_API_KEY")
+        endpoint = "https://api.autogon.ai/api/v1/engine/upload/"
+        header = {"X-Aug-Key": api_key}
+        image_byte = image.open(mode="rb")
+        # print(image.file)
+        # with open(image, 'rb') as file:
+        files = {"file": image_byte}
+        # Make the POST request to the API endpoint
+        response = requests.post(endpoint, files=files, headers=header).json()
+
+        image_url = response["location"]
+        result = get_img_prediction(image_url=image_url)
+        # print(result)
+        return {
+            "result": result
         }
